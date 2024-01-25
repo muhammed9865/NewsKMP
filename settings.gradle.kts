@@ -1,4 +1,4 @@
-rootProject.name = "my-bird-app"
+rootProject.name = "news"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
