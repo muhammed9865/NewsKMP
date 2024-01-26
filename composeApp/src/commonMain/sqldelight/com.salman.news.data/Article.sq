@@ -1,0 +1,14 @@
+CREATE TABLE Article (
+    id INTEGER PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    content TEXT NOT NULL,
+    publish_date TEXT NOT NULL,
+    author TEXT,
+    is_saved INTEGER NOT NULL,
+    article_url TEXT,
+    image_url TEXT NOT NULL,
+    source_name TEXT NOT NULL,
+
+    FOREIGN KEY (source_name) REFERENCES Source(name)
+);

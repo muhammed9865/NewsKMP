@@ -19,6 +19,6 @@ class ShitImpl : Shit {
 val sharedModule = module {
     single<Shit> { ShitImpl() }
     factory {
-        HomeViewModel(get())
+        HomeViewModel(get(), get())
     }
 }

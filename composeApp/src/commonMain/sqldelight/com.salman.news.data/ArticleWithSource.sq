@@ -1,0 +1,3 @@
+import com.salman.news.data.Source;
+
+-- Define Article with Source query --
