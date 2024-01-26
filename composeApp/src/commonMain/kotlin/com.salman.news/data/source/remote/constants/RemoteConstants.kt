@@ -1,4 +1,4 @@
-package com.salman.news.data.source.remote
+package com.salman.news.data.source.remote.constants
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/25/2024.

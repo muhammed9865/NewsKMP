@@ -1,8 +1,11 @@
-package com.salman.news.di
+package com.salman.news.data.di
 
-import com.salman.news.data.source.remote.RemoteConstants
-import com.salman.news.data.source.remote.RemoteConstantsImpl
+import com.salman.news.data.source.remote.ArticlesRemoteDataSource
+import com.salman.news.data.source.remote.CustomHttpLogger
+import com.salman.news.data.source.remote.constants.RemoteConstants
+import com.salman.news.data.source.remote.constants.RemoteConstantsImpl
 import com.salman.news.data.source.remote.getHttpClient
+import com.salman.news.data.source.remote.impl.ArticlesRemoteDataSourceImpl
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
@@ -13,6 +16,7 @@ import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
 /**
@@ -29,10 +33,12 @@ val dataModule = module {
 
         HttpClient(engine = getHttpClient()) {
             install(ContentNegotiation) {
-                json()
+                json(json = Json {
+                    ignoreUnknownKeys = true
+                })
             }
             install(Logging) {
-                logger = Logger.DEFAULT
+                logger = CustomHttpLogger()
                 level = LogLevel.ALL
             }
             install(HttpTimeout) {
@@ -43,6 +49,11 @@ val dataModule = module {
                 url(constants.getBaseUrl())
                 header("X-Api-Key", constants.getAPIKey())
             }
+
         }
+    }
+
+    single<ArticlesRemoteDataSource> {
+        ArticlesRemoteDataSourceImpl(get())
     }
 }
