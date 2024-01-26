@@ -2,12 +2,12 @@ CREATE TABLE Article (
     id INTEGER PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     description TEXT,
-    content TEXT NOT NULL,
+    content TEXT,
     publish_date TEXT NOT NULL,
     author TEXT,
     is_saved INTEGER NOT NULL,
-    article_url TEXT,
-    image_url TEXT NOT NULL,
+    article_url TEXT NOT NULL ,
+    image_url TEXT,
     source_name TEXT NOT NULL,
 
     FOREIGN KEY (source_name) REFERENCES Source(name)
