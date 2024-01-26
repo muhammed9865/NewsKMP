@@ -1,7 +1,7 @@
 package com.salman.news
 
 import android.app.Application
-import com.salman.news.di.dataModule
+import com.salman.news.data.di.dataModule
 import com.salman.news.presentation.sharedModule
 import org.koin.core.context.startKoin
 
