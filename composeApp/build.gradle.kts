@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.mokoResources) apply false // FIXME build fails "can't find jvm declaration"
+    alias(libs.plugins.mokoResources) // FIXME build fails "can't find jvm declaration"
 }
 
 sqldelight {
@@ -41,6 +41,13 @@ kotlin {
     jvm("jvm")
     
     sourceSets {
+        // Needed to fix Moko-resources build failure (MR has no actual declaration)
+        getByName("androidMain").dependsOn(commonMain.get())
+        getByName("jvmMain").dependsOn(commonMain.get())
+        getByName("iosArm64Main").dependsOn(commonMain.get())
+        getByName("iosX64Main").dependsOn(commonMain.get())
+        getByName("iosSimulatorArm64Main").dependsOn(commonMain.get())
+        // endregion
 
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -67,7 +74,7 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.koin)
-            // implementation(libs.moko.resources) FIXME build fails "can't find jvm declaration"
+            implementation(libs.moko.resources)// FIXME build fails "can't find jvm declaration"
             implementation(libs.kotlinx.datetime)
             implementation(libs.sqlDelight.coroutines)
         }
@@ -134,9 +141,9 @@ compose.desktop {
 
 // Moko-Resources configuration
 // FIXME build fails "can't find jvm declaration"
-/*multiplatformResources {
+multiplatformResources {
     multiplatformResourcesPackage = "com.salman.news" // required
     multiplatformResourcesSourceSet = "commonMain"  // optional, default "commonMain"
     disableStaticFrameworkWarning = true
-}*/
+}
 
