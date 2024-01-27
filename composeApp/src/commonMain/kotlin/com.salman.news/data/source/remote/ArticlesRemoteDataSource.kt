@@ -1,6 +1,6 @@
 package com.salman.news.data.source.remote
 
-import com.salman.news.data.model.article.ArticlesDTO
+import com.salman.news.data.source.remote.model.article.ArticlesDTO
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/25/2024.

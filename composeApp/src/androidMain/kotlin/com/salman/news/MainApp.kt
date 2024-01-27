@@ -1,8 +1,10 @@
 package com.salman.news
 
 import android.app.Application
+import com.salman.news.data.di.PlatformDataModule
 import com.salman.news.data.di.dataModule
 import com.salman.news.presentation.sharedModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 /**
@@ -13,7 +15,8 @@ class MainApp : Application() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
-            modules(sharedModule + dataModule)
+            androidContext(this@MainApp)
+            modules(sharedModule + dataModule + PlatformDataModule().module)
         }
     }
 }

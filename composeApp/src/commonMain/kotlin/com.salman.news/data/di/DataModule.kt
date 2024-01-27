@@ -1,11 +1,15 @@
 package com.salman.news.data.di
 
+import com.salman.news.data.repository.ArticleRepositoryImpl
+import com.salman.news.data.source.local.ArticlesLocalDataSource
+import com.salman.news.data.source.local.impl.ArticlesLocalDataSourceImpl
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import com.salman.news.data.source.remote.CustomHttpLogger
 import com.salman.news.data.source.remote.constants.RemoteConstants
 import com.salman.news.data.source.remote.constants.RemoteConstantsImpl
 import com.salman.news.data.source.remote.getHttpClient
 import com.salman.news.data.source.remote.impl.ArticlesRemoteDataSourceImpl
+import com.salman.news.domain.repository.ArticleRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
@@ -55,5 +59,9 @@ val dataModule = module {
 
     single<ArticlesRemoteDataSource> {
         ArticlesRemoteDataSourceImpl(get())
+    }
+
+    single<ArticleRepository> {
+        ArticleRepositoryImpl(get(), get())
     }
 }

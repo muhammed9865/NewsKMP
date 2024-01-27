@@ -1,4 +1,4 @@
-package com.salman.news.data.model.article
+package com.salman.news.data.source.remote.model.article
 
 import kotlinx.serialization.Serializable
 

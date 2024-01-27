@@ -1,4 +1,5 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -11,7 +12,7 @@ plugins {
 
 sqldelight {
     databases {
-        create("news_database") {
+        create("NewsDatabase") {
             packageName.set("com.salman.news.database")
         }
     }
@@ -37,7 +38,7 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("jvm")
     
     sourceSets {
 
@@ -68,10 +69,13 @@ kotlin {
             implementation(libs.voyager.koin)
             // implementation(libs.moko.resources) FIXME build fails "can't find jvm declaration"
             implementation(libs.kotlinx.datetime)
+            implementation(libs.sqlDelight.coroutines)
         }
 
         jvmMain.dependencies {
-            implementation(libs.sqlDelight.driver.native)
+            implementation(compose.desktop.common)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.sqlDelight.driver.jvm)
         }
 
         iosMain.dependencies {
@@ -112,6 +116,19 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.salman.news"
+            packageVersion = "1.0.0"
+        }
     }
 }
 

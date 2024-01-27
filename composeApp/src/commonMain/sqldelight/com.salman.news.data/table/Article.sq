@@ -1,3 +1,4 @@
+-- Nullable fields: description, content, author, imageUrl
 CREATE TABLE Article (
     id INTEGER PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,

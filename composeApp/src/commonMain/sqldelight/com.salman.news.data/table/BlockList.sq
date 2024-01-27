@@ -1,0 +1,5 @@
+CREATE TABLE BlockList (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_name TEXT,
+    author TEXT
+);
