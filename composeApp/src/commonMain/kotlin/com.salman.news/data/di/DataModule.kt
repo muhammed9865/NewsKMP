@@ -1,8 +1,6 @@
 package com.salman.news.data.di
 
 import com.salman.news.data.repository.ArticleRepositoryImpl
-import com.salman.news.data.source.local.ArticlesLocalDataSource
-import com.salman.news.data.source.local.impl.ArticlesLocalDataSourceImpl
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import com.salman.news.data.source.remote.CustomHttpLogger
 import com.salman.news.data.source.remote.constants.RemoteConstants
@@ -14,9 +12,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
@@ -27,7 +23,7 @@ import org.koin.dsl.module
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/25/2024.
  */
 
-val dataModule = module {
+val sharedDataModule = module {
     single<RemoteConstants> {
         RemoteConstantsImpl()
     }

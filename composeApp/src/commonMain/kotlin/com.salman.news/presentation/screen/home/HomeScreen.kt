@@ -12,6 +12,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import com.salman.news.MR
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import com.salman.news.presentation.screen.ScreenModifier
 import com.salman.news.presentation.screen.search.SearchScreen
@@ -25,9 +26,6 @@ class HomeScreen : Screen {
         val viewModel = getScreenModel<HomeViewModel>()
         val navigator = LocalNavigator.currentOrThrow
         val countryCode = Locale.current.region.lowercase()
-        LaunchedEffect(Unit) {
-            viewModel.print("", countryCode)
-        }
 
         Column(
             modifier = ScreenModifier,
