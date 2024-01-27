@@ -1,6 +1,6 @@
 package com.salman.news.data.source.remote.impl
 
-import com.salman.news.data.model.article.ArticlesDTO
+import com.salman.news.data.source.remote.model.article.ArticlesDTO
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -16,6 +16,7 @@ class ArticlesRemoteDataSourceImpl(
 ): ArticlesRemoteDataSource {
     override suspend fun getTopHeadlines(page: Int, countryCode: String): ArticlesDTO {
         return client.get("top-headlines") {
+            parameter("page", page)
             parameter("country", countryCode)
         }.body()
     }

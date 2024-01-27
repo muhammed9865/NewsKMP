@@ -9,8 +9,9 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ArticleRepository {
 
-    fun getArticlesFlow(): Flow<List<Article>>
-    suspend fun saveArticle(id: Int)
+    suspend fun loadArticles(page: Int, countryCode: String)
+    suspend fun getArticlesFlow(): Flow<List<Article>>
+    suspend fun toggleArticleBookmark(id: Int)
     suspend fun muteSource(source: ArticleSource)
     suspend fun muteAuthor(author: String)
 }

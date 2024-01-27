@@ -1,0 +1,34 @@
+-- Define Article with Source query --
+
+getArticles:
+SELECT A.id, A.title, A.description, A.content, A.publish_date,
+       A.author, A.is_saved, A.image_url, A.article_url,
+       S.name AS source_name, S.id AS source_id
+FROM Article AS A
+JOIN Source AS S ON A.source_name = S.name;
+
+getArticleById:
+SELECT A.id, A.title, A.description, A.content, A.publish_date,
+       A.author, A.is_saved, A.image_url, A.article_url,
+       S.name AS source_name, S.id AS source_id
+FROM Article AS A
+JOIN Source AS S ON A.source_name = S.name
+WHERE A.id = :id;
+
+
+getSavedArticles:
+SELECT A.id, A.title, A.description, A.content, A.publish_date,
+       A.author, A.is_saved, A.image_url, A.source_name, A.article_url,
+       S.name AS source_name, S.id AS source_id
+FROM Article AS A
+JOIN Source AS S ON A.source_name = S.name
+WHERE A.is_saved = 1;
+
+insertOrReplaceArticle:
+INSERT OR REPLACE INTO Article
+VALUES ?;
+
+muteSource:
+INSERT OR REPLACE INTO BlockList
+VALUES (-1, ?, ?);
+

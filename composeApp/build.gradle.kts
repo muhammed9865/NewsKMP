@@ -1,4 +1,5 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -6,12 +7,12 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.mokoResources) apply false // FIXME build fails "can't find jvm declaration"
+    alias(libs.plugins.mokoResources)
 }
 
 sqldelight {
     databases {
-        create("news_database") {
+        create("NewsDatabase") {
             packageName.set("com.salman.news.database")
         }
     }
@@ -37,9 +38,16 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+    jvm("jvm")
     
     sourceSets {
+        // Needed to fix Moko-resources build failure (MR has no actual declaration)
+        getByName("androidMain").dependsOn(commonMain.get())
+        getByName("jvmMain").dependsOn(commonMain.get())
+        getByName("iosArm64Main").dependsOn(commonMain.get())
+        getByName("iosX64Main").dependsOn(commonMain.get())
+        getByName("iosSimulatorArm64Main").dependsOn(commonMain.get())
+        // endregion
 
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -66,12 +74,15 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.koin)
-            // implementation(libs.moko.resources) FIXME build fails "can't find jvm declaration"
+            implementation(libs.moko.resources)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.sqlDelight.coroutines)
         }
 
         jvmMain.dependencies {
-            implementation(libs.sqlDelight.driver.native)
+            implementation(compose.desktop.common)
+            implementation(compose.desktop.currentOs)
+            implementation(libs.sqlDelight.driver.jvm)
         }
 
         iosMain.dependencies {
@@ -112,14 +123,26 @@ android {
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+
+    }
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.salman.news"
+            packageVersion = "1.0.0"
+        }
     }
 }
 
 // Moko-Resources configuration
-// FIXME build fails "can't find jvm declaration"
-/*multiplatformResources {
+multiplatformResources {
     multiplatformResourcesPackage = "com.salman.news" // required
     multiplatformResourcesSourceSet = "commonMain"  // optional, default "commonMain"
     disableStaticFrameworkWarning = true
-}*/
+}
 

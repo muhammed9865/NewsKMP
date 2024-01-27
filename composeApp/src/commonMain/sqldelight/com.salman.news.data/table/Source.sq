@@ -1,0 +1,4 @@
+CREATE TABLE Source (
+    name TEXT PRIMARY KEY NOT NULL,
+    id TEXT
+);
