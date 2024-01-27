@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqlDelight)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.mokoResources) // FIXME build fails "can't find jvm declaration"
+    alias(libs.plugins.mokoResources)
 }
 
 sqldelight {
@@ -74,7 +74,7 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.tabNavigator)
             implementation(libs.voyager.koin)
-            implementation(libs.moko.resources)// FIXME build fails "can't find jvm declaration"
+            implementation(libs.moko.resources)
             implementation(libs.kotlinx.datetime)
             implementation(libs.sqlDelight.coroutines)
         }
@@ -140,7 +140,6 @@ compose.desktop {
 }
 
 // Moko-Resources configuration
-// FIXME build fails "can't find jvm declaration"
 multiplatformResources {
     multiplatformResourcesPackage = "com.salman.news" // required
     multiplatformResourcesSourceSet = "commonMain"  // optional, default "commonMain"
