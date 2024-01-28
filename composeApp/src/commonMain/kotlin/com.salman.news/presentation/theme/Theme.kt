@@ -24,6 +24,8 @@ val LightColorScheme = lightColorScheme(
     onBackground = MetabolicBlue,
     primaryContainer = QuickSilver,
     onPrimaryContainer = CharcoalBlue,
+    surface = AzuerishWhite,
+    onSurface = MetabolicBlue
 )
 
 @Composable

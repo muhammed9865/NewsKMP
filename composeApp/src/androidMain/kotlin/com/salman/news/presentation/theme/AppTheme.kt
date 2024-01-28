@@ -38,12 +38,12 @@ actual fun NewsTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            window.navigationBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.surface.toArgb()
+            window.navigationBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                !colorScheme.primary.isColorDark()
+                !colorScheme.surface.isColorDark()
             WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars =
-                !colorScheme.primary.isColorDark()
+                !colorScheme.surface.isColorDark()
 
         }
     }
