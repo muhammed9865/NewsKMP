@@ -1,7 +1,7 @@
 package com.salman.news.presentation.screen.search
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import com.salman.news.MR
