@@ -77,6 +77,8 @@ kotlin {
             implementation(libs.moko.resources)
             implementation(libs.kotlinx.datetime)
             implementation(libs.sqlDelight.coroutines)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
 
         jvmMain.dependencies {
