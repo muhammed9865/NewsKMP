@@ -1,28 +1,33 @@
 package com.salman.news.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.salman.news.MR
-import com.salman.news.presentation.composables.TonalIcon
+import com.salman.news.presentation.composables.TonalIconButton
 import com.salman.news.presentation.navigation.BottomNavigationItem
 import com.salman.news.presentation.navigation.NavigationTab
+import com.salman.news.presentation.theme.Dimens
 import com.salman.news.presentation.theme.NewsTheme
 import dev.icerock.moko.resources.compose.painterResource
 
@@ -34,7 +39,11 @@ fun App() {
     ) {
         TabNavigator(NavigationTab.Home) {
             Scaffold(
-                content = { CurrentScreen() },
+                content = {
+                    Box(Modifier.fillMaxSize().padding(it)) {
+                        CurrentScreen()
+                    }
+                },
                 topBar = { TopAppBar() },
                 bottomBar = { BottomAppBar() }
             )
@@ -47,23 +56,29 @@ fun App() {
 private fun TopAppBar() {
     val navigator = LocalTabNavigator.current
     val currentTab = navigator.current
+    val density = LocalDensity.current
+    val windowInsets = WindowInsets(
+        left = Dimens.ItemsPadding,
+        right = Dimens.ItemsPadding,
+        top = TopAppBarDefaults.windowInsets.getTop(density).dp,
+        bottom = TopAppBarDefaults.windowInsets.getBottom(density).dp,
+    )
     Surface(shadowElevation = 4.dp) {
-        TopAppBar(
+        CenterAlignedTopAppBar(
+            windowInsets = windowInsets,
             title = {
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
                     text = currentTab.options.title,
                     style = MaterialTheme.typography.titleLarge,
-                    textAlign = TextAlign.Center
                 )
             },
             actions = {
-                TonalIcon(painter = painterResource(MR.images.ic_search)) {
+                TonalIconButton(painter = painterResource(MR.images.ic_search)) {
                     // TODO navigate to search screen
                 }
             },
             navigationIcon = {
-                TonalIcon(painter = painterResource(MR.images.ic_list))
+                TonalIconButton(painter = painterResource(MR.images.ic_list))
             }
         )
     }
@@ -71,8 +86,10 @@ private fun TopAppBar() {
 
 @Composable
 private fun BottomAppBar() {
-    BottomAppBar(
-        containerColor = MaterialTheme.colorScheme.background
+    Box(
+        modifier = Modifier.fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .padding(vertical = Dimens.ItemsPadding)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

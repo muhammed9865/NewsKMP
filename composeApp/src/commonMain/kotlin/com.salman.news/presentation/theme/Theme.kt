@@ -13,7 +13,7 @@ val DarkColorScheme = darkColorScheme(
     onPrimary = Color.White,
     background = Color.White,
     onBackground = MetabolicBlue,
-    primaryContainer = QuickSilver,
+    primaryContainer = QuickSilver20A,
     onPrimaryContainer = CharcoalBlue,
 )
 
@@ -22,7 +22,7 @@ val LightColorScheme = lightColorScheme(
     onPrimary = Color.White,
     background = Color.White,
     onBackground = MetabolicBlue,
-    primaryContainer = QuickSilver,
+    primaryContainer = QuickSilver20A,
     onPrimaryContainer = CharcoalBlue,
     surface = AzuerishWhite,
     onSurface = MetabolicBlue

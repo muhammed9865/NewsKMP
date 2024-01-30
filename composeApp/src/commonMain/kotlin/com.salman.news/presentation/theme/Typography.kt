@@ -40,6 +40,10 @@ fun Typography() = run {
         labelMedium = TextStyle(
             fontFamily = jomhuriaFontFamily,
             fontSize = 16.sp
+        ),
+        labelLarge = TextStyle(
+            fontFamily = jomhuriaFontFamily,
+            fontSize = 18.sp
         )
     )
 }
