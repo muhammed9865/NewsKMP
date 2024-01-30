@@ -47,7 +47,7 @@ fun BottomNavigationItem(tab: NavigationTab) {
             Box(
                 Modifier.size(6.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(MaterialTheme.colorScheme.primary)
             )
         }
     }
