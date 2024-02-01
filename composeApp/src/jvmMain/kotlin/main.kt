@@ -1,7 +1,7 @@
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.salman.news.data.di.PlatformDataModule
-import com.salman.news.data.di.sharedDataModule
+import com.salman.news.di.sharedModule
 import com.salman.news.presentation.App
 import org.koin.core.context.GlobalContext.startKoin
 
@@ -10,7 +10,7 @@ import org.koin.core.context.GlobalContext.startKoin
  */
 fun main() {
     startKoin {
-        modules(sharedDataModule + PlatformDataModule().module)
+        modules(sharedModule + PlatformDataModule().module)
     }
 
     application {
