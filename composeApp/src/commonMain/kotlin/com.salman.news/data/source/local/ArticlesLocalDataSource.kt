@@ -13,7 +13,7 @@ interface ArticlesLocalDataSource {
     suspend fun getArticlesFlow(): Flow<List<ArticleEntity>>
     suspend fun getSavedArticlesFlow(): Flow<List<ArticleEntity>>
 
-    suspend fun getArticleById(id: Int): ArticleEntity?
+    suspend fun getArticleById(id: Long): ArticleEntity?
     suspend fun updateArticle(article: ArticleEntity)
     suspend fun insertArticles(articles: List<Article>)
 

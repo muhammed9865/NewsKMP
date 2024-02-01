@@ -5,7 +5,12 @@ SELECT A.id, A.title, A.description, A.content, A.publish_date,
        A.author, A.is_saved, A.image_url, A.article_url,
        S.name AS source_name, S.id AS source_id
 FROM Article AS A
-JOIN Source AS S ON A.source_name = S.name;
+JOIN Source AS S ON A.source_name = S.name
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM BlockList AS BL
+    WHERE BL.source_name = A.source_name OR BL.author = A.author
+);
 
 getArticleById:
 SELECT A.id, A.title, A.description, A.content, A.publish_date,
@@ -28,7 +33,12 @@ insertOrReplaceArticle:
 INSERT OR REPLACE INTO Article
 VALUES ?;
 
+updateArticle: -- Add columns as needed, currently only provided columns are used for updating.
+UPDATE Article
+SET is_saved = :is_saved
+WHERE id = :id;
+
 muteSource:
-INSERT OR REPLACE INTO BlockList
-VALUES (-1, ?, ?);
+INSERT OR REPLACE INTO BlockList (source_name, author)
+VALUES (?, ?);
 
