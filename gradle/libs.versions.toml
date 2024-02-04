@@ -22,6 +22,7 @@ voyager = "1.0.0"
 moko-res = "0.23.0"
 kotlinx-datetime = "0.5.0"
 coil = "3.0.0-alpha03"
+coroutines = "1.7.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,6 +43,11 @@ compose-material = { module = "androidx.compose.material:material", version.ref 
 
 moko-resources  = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-res" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+
+# Coroutines
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 
 #SQLDelight
 sqlDelight-driver-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }

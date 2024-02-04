@@ -15,4 +15,9 @@ data class Article(
     val source: ArticleSource,
     val imageUrl: String,
     val isSaved: Boolean,
-)
+) {
+    val labels: Set<String>
+        get() = listOf(author, source.name)
+            .filterNot { it.isBlank() }
+            .toSet()
+}

@@ -82,7 +82,7 @@ class ArticlesLocalDataSourceImpl(
     override suspend fun insertArticles(articles: List<Article>) {
         articleQueries.transaction {
             articles.forEach { article ->
-                articleQueries.insertOrReplaceArticle(
+                articleQueries.insertArticle(
                     with(article) {
                         val id =
                             IDHashGenerator.generate(title, article.source.name, url, author ?: "")

@@ -1,5 +1,6 @@
 package com.salman.news.presentation.theme
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.dp
 
@@ -10,4 +11,5 @@ import androidx.compose.ui.unit.dp
 object Dimens {
     val ItemsPadding = 10.dp
     val ArticleItemPadding = 2.dp
+    val LabelContentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp)
 }

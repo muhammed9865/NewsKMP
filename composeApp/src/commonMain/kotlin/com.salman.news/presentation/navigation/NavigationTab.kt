@@ -15,11 +15,11 @@ import dev.icerock.moko.resources.compose.stringResource
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/27/2024.
  */
-sealed class NavigationTab: Tab {
+sealed class NavigationTab : Tab {
     @Composable
     fun isCurrentScreen(): Boolean {
         val tabNavigator = LocalTabNavigator.current
-        return tabNavigator.current == this
+        return tabNavigator.currentOrNull == this
     }
 
     data object Home : NavigationTab() {
@@ -86,4 +86,8 @@ sealed class NavigationTab: Tab {
             }
     }
 
+    companion object {
+        val tabs: List<NavigationTab>
+            get() = listOf(Home, Settings, Bookmarks)
+    }
 }
