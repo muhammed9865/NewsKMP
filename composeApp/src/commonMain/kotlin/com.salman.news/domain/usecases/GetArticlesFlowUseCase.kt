@@ -6,8 +6,12 @@ import com.salman.news.presentation.model.ArticleUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
 /**
@@ -17,20 +21,22 @@ class GetArticlesFlowUseCase(
     private val repository: ArticleRepository
 ) {
     suspend operator fun invoke(articlesWithOpenMenu: HashSet<Long>): Flow<List<ArticleUI>> {
-        return withContext(Dispatchers.IO) {
-            flow {
-                repository.getArticlesFlow()
-                    .map { articles ->
-                        articles.map {
-                            it.toUI(articlesWithOpenMenu)
-                        }
-                    }.collect { articlesUI ->
-                        withContext(Dispatchers.Main) {
-                            emit(articlesUI)
-                        }
+        return channelFlow {
+            repository.getArticlesFlow()
+                .flowOn(Dispatchers.IO)
+                .map { articles ->
+                    articles.map {
+                        it.toUI(articlesWithOpenMenu)
                     }
-            }
-
+                }
+                .flowOn(Dispatchers.Default)
+                .onEach { articlesUI ->
+                    withContext(Dispatchers.Main) {
+                        send(articlesUI)
+                    }
+                }
+                .flowOn(Dispatchers.Main)
+                .collect()
         }
     }
 
