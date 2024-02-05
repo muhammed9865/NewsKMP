@@ -124,59 +124,6 @@ fun ArticleItem(
 }
 
 @Composable
-fun LoadingArticleItem(modifier: Modifier = Modifier) {
-    val itemSize = DpSize(width = Dp.Infinity, height = 200.dp)
-    val containerModifier = Modifier.fillMaxWidth()
-        .clip(MaterialTheme.shapes.large)
-    Row(
-        modifier = modifier
-            .size(itemSize)
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(end = Dimens.ItemsPadding)
-    ) {
-        ShimmerContainer {
-            AsyncShimmerImage(model = "null", size = DpSize(170.dp, 200.dp))
-        }
-        Spacer(Modifier.width(Dimens.ItemsPadding))
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceAround
-        ) {
-            // Title
-            ShimmerContainer(
-                modifier = containerModifier.padding(30.dp),
-                content = {}
-            )
-            // Description
-            ShimmerContainer(
-                modifier = containerModifier.padding(20.dp),
-                content = {}
-            )
-            // Date
-            ShimmerContainer(
-                modifier = containerModifier.padding(10.dp),
-                content = {}
-            )
-
-            // Labels
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                ShimmerContainer(
-                    modifier = containerModifier.padding(vertical = 10.dp, horizontal = 60.dp),
-                    content = {}
-                )
-                ShimmerContainer(
-                    modifier = containerModifier.padding(vertical = 10.dp, horizontal = 60.dp),
-                    content = {}
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
     articles: List<ArticleUI>,
@@ -207,11 +154,7 @@ fun ArticlesList(
 
         if (isLoadingMoreArticles) {
             item {
-                Column(Modifier.fillMaxWidth()) {
-                    repeat(2) {
-                        LoadingArticleItem()
-                    }
-                }
+                LoadingArticlesList(itemsCount = 2)
             }
         }
     }

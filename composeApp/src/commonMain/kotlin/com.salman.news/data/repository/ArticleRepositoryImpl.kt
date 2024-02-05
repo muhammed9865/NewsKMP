@@ -49,6 +49,14 @@ class ArticleRepositoryImpl(
         }
     }
 
+    override suspend fun getBookmarkedArticlesFlow(): Flow<List<Article>> {
+        return localDataSource.getSavedArticlesFlow().map { entities ->
+            entities.map {
+                it.toDomain()
+            }
+        }
+    }
+
     override suspend fun toggleArticleBookmark(id: Long) {
         val articleEntity = localDataSource.getArticleById(id) ?: return
         val isSaved = articleEntity.isSaved

@@ -1,5 +1,6 @@
 package com.salman.news.presentation.di
 
+import com.salman.news.presentation.screen.bookmark.BookmarkViewModel
 import com.salman.news.presentation.screen.home.HomeViewModel
 import org.koin.dsl.module
 
@@ -8,5 +9,6 @@ import org.koin.dsl.module
  */
 
 val viewModelModule = module {
-    factory { HomeViewModel(get()) }
+    factory { HomeViewModel(get(), get(), get()) }
+    factory { BookmarkViewModel(get(), get(), get()) }
 }

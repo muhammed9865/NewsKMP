@@ -1,23 +1,17 @@
 package com.salman.news.presentation.screen.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.intl.Locale
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.salman.news.presentation.composables.ArticlesList
-import com.salman.news.presentation.composables.LoadingArticleItem
+import com.salman.news.presentation.composables.LoadingArticlesList
 import com.salman.news.presentation.navigation.firstParent
 import com.salman.news.presentation.screen.details.ArticleDetailsScreen
-import com.salman.news.presentation.theme.Dimens
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/25/2024.
@@ -53,19 +47,8 @@ class HomeScreen : Screen {
 
         when {
             articles.isNotEmpty() -> { ArticlesList() }
-            state.isLoadingInitialArticles -> LoadingArticles()
+            state.isLoadingInitialArticles -> LoadingArticlesList()
             state.hasLoadedInitialArticles -> { ArticlesList() }
-        }
-    }
-
-    @Composable
-    private fun LoadingArticles(modifier: Modifier = Modifier) {
-        Column(modifier.fillMaxSize()) {
-            Spacer(Modifier.height(Dimens.ItemsPadding))
-            repeat(5) {
-                LoadingArticleItem()
-                Spacer(Modifier.height(Dimens.ArticleItemPadding))
-            }
         }
     }
 }
