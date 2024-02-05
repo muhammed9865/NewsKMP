@@ -1,6 +1,7 @@
 package com.salman.news.data.di
 
 import com.salman.news.data.repository.ArticleRepositoryImpl
+import com.salman.news.data.repository.FakeArticleRepositoryImpl
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import com.salman.news.data.source.remote.CustomHttpLogger
 import com.salman.news.data.source.remote.constants.RemoteConstants

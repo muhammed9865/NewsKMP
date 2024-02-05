@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <color name="azureish_white">#DDDBF1</color>
+    <color name="azureish_white_50a">#32DDDBF1</color>
+    <color name="metabolic_blue">#3C4F76</color>
+    <color name="metabolic_blue_10a">#0A3C4F76</color>
+    <color name="charcoal_blue">#383F51</color>
+    <color name="quick_silver">#AB9F9D</color>
+</resources>

@@ -20,9 +20,13 @@ class ArticleRepositoryImpl(
     private val localDataSource: ArticlesLocalDataSource,
 ): ArticleRepository {
 
-    override suspend fun loadArticles(page: Int, countryCode: String) {
+    override suspend fun loadArticles(page: Int, countryCode: String): Result<Unit> {
         val articlesDTO = remoteDataSource.getTopHeadlines(page, countryCode)
-        val articles = articlesDTO.articles
+        if (articlesDTO.isFailure) {
+            return Result.failure(articlesDTO.exceptionOrNull()!!)
+        }
+
+        val articles = articlesDTO.getOrThrow().articles
         val sources = articles.map { it.source }
 
         coroutineScope {
@@ -33,6 +37,8 @@ class ArticleRepositoryImpl(
                 localDataSource.insertSources(sources)
             }
         }
+
+        return Result.success(Unit)
     }
 
     override suspend fun getArticlesFlow(): Flow<List<Article>> {
@@ -43,7 +49,7 @@ class ArticleRepositoryImpl(
         }
     }
 
-    override suspend fun toggleArticleBookmark(id: Int) {
+    override suspend fun toggleArticleBookmark(id: Long) {
         val articleEntity = localDataSource.getArticleById(id) ?: return
         val isSaved = articleEntity.isSaved
         val updatedArticle = articleEntity.copy(isSaved = !isSaved)

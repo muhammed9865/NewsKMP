@@ -12,4 +12,11 @@ data class Article(
     val title: String,
     val url: String,
     val urlToImage: String?,
-)
+) {
+
+    fun isRemoved() = kotlin.run {
+        listOf(description, author, title).any {
+            it?.lowercase()?.contains("removed") == true
+        }
+    }
+}

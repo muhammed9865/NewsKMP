@@ -14,4 +14,15 @@ object DateTimeUtil {
         val instant = Instant.parse(date)
         return instant.toLocalDateTime(TimeZone.UTC)
     }
+
+    fun format(date: LocalDateTime): String {
+        val amOrPm = if (date.hour > 12) "PM" else "AM"
+        val hour = if (date.hour > 12) // 24h-system to 12h-system
+            24 - date.hour
+        else
+            date.hour
+        return with(date) {
+            "$hour:$minute $amOrPm $dayOfMonth/$monthNumber/$year"
+        }
+    }
 }

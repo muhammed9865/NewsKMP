@@ -8,8 +8,6 @@ import com.salman.news.data.source.remote.model.article.Article
 import com.salman.news.domain.model.Article as DomainArticle
 import com.salman.news.data.source.remote.model.article.Source
 import com.salman.news.domain.model.ArticleSource
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.toLocalDateTime
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/26/2024.
@@ -39,6 +37,7 @@ fun ArticleEntity.toDomain(): DomainArticle {
         author,
         source.toDomain(),
         imageUrl ?: ImageUrlGenerator.get(),
+        articleUrl,
         isSaved
     )
 }

@@ -11,6 +11,7 @@ import com.salman.news.data.source.remote.model.article.Source
 import com.salman.news.database.NewsDatabase
 import comsalmannewsdata.query.GetArticles
 import comsalmannewsdata.query.GetSavedArticles
+import comsalmannewsdata.table.BlockList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.coroutines.coroutineContext
@@ -50,8 +51,8 @@ class ArticlesLocalDataSourceImpl(
             }
     }
 
-    override suspend fun getArticleById(id: Int): ArticleEntity? {
-        val result = articleQueries.getArticleById(id.toLong())
+    override suspend fun getArticleById(id: Long): ArticleEntity? {
+        val result = articleQueries.getArticleById(id)
             .executeAsOneOrNull() ?: return null
 
         return with(result) {
@@ -72,15 +73,19 @@ class ArticlesLocalDataSourceImpl(
     }
 
     override suspend fun updateArticle(article: ArticleEntity) {
-        articleQueries.insertOrReplaceArticle(article.toArticle())
+        articleQueries.updateArticle(
+            is_saved = article.isSaved.toLong(),
+            id = article.id
+        )
     }
 
     override suspend fun insertArticles(articles: List<Article>) {
         articleQueries.transaction {
             articles.forEach { article ->
-                articleQueries.insertOrReplaceArticle(
+                articleQueries.insertArticle(
                     with(article) {
-                        val id = IDHashGenerator.generate(title, article.source.name, url, author ?: "")
+                        val id =
+                            IDHashGenerator.generate(title, article.source.name, url, author ?: "")
                         comsalmannewsdata.table.Article(
                             id = id,
                             title = title,
@@ -108,11 +113,11 @@ class ArticlesLocalDataSourceImpl(
     }
 
     override suspend fun muteSource(source: Source) {
-        articleQueries.muteSource(source.name, null)
+        articleQueries.muteSource(source_name = source.name, author = null)
     }
 
     override suspend fun muteAuthor(author: String) {
-        articleQueries.muteSource(null, author)
+        articleQueries.muteSource(source_name = null, author = author)
     }
 
     private fun GetArticles.mapToArticleEntity(): ArticleEntity {
@@ -162,5 +167,6 @@ class ArticlesLocalDataSourceImpl(
         )
     }
 
-    private fun Long.toBoolean() = equals(1)
+    private fun Long.toBoolean() = this == 1L
+    private fun Boolean.toLong() = if (this) 1L else 0L
 }
