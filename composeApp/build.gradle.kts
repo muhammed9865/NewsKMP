@@ -26,6 +26,10 @@ kotlin {
             }
         }
     }
+
+    compilerOptions {
+        optIn.add("Xexpect-actual-classes")
+    }
     
     listOf(
         iosX64(),
@@ -55,6 +59,7 @@ kotlin {
             implementation(libs.sqlDelight.driver.android)
             implementation(libs.ktor.client.android)
             implementation(libs.koin.android)
+            implementation(libs.coroutines.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -79,12 +84,14 @@ kotlin {
             implementation(libs.sqlDelight.coroutines)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+            implementation(libs.coroutines.core)
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.common)
             implementation(compose.desktop.currentOs)
             implementation(libs.sqlDelight.driver.jvm)
+            implementation(libs.coroutines.swing)
         }
 
         iosMain.dependencies {
@@ -104,6 +111,7 @@ android {
 
     defaultConfig {
         applicationId = "com.salman.news"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -124,8 +132,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     dependencies {
+        androidTestImplementation(libs.androidx.test.junit)
+        androidTestImplementation(libs.androidx.espresso.core)
+        androidTestImplementation(libs.kotlinx.coroutines.test)
         debugImplementation(libs.compose.ui.tooling)
-
     }
 }
 
