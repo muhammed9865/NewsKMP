@@ -9,6 +9,6 @@ import org.koin.dsl.module
  */
 
 val viewModelModule = module {
-    factory { HomeViewModel(get()) }
+    factory { HomeViewModel(get(), get(), get()) }
     factory { BookmarkViewModel(get(), get(), get()) }
 }

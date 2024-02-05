@@ -3,13 +3,14 @@ package com.salman.news.presentation.screen.home
 import androidx.compose.runtime.mutableStateListOf
 import com.salman.news.core.CoroutineViewModel
 import com.salman.news.core.Resource
-import com.salman.news.domain.model.Article
+import com.salman.news.core.addOrRemove
 import com.salman.news.domain.repository.ArticleRepository
+import com.salman.news.domain.usecases.GetArticlesFlowUseCase
+import com.salman.news.domain.usecases.ToggleArticleBookmarkUseCase
 import com.salman.news.presentation.common.ArticleItemPager
 import com.salman.news.presentation.model.ArticleUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -18,9 +19,11 @@ import kotlinx.coroutines.launch
  */
 class HomeViewModel(
     private val articleRepository: ArticleRepository,
+    private val getArticlesFlowUseCase: GetArticlesFlowUseCase,
+    private val toggleArticleBookmarkUseCase: ToggleArticleBookmarkUseCase,
 ) : CoroutineViewModel() {
 
-    private var articleIDsWithMenuOpen = mutableMapOf<Long, Unit>()
+    private var articleIDsWithMenuOpen = hashSetOf<Long>()
     private var countryCode: String? = null
     private val pager = ArticleItemPager(articleRepository)
 
@@ -34,16 +37,11 @@ class HomeViewModel(
     }
 
     init {
-        scope.launchIO {
-            articleRepository
-                .getArticlesFlow()
-                .map { articlesDTO ->
-                    articlesDTO.map { article -> article.toUI() }
-                }.collect {
-                    launchMain {
-                        articles.clear()
-                        articles.addAll(it)
-                    }
+        scope.launch {
+            getArticlesFlowUseCase(articleIDsWithMenuOpen)
+                .collect {
+                    articles.clear()
+                    articles.addAll(it)
                 }
         }
 
@@ -90,7 +88,7 @@ class HomeViewModel(
 
     fun toggleArticleBookmark(articleUI: ArticleUI) {
         scope.launchIO {
-            articleRepository.toggleArticleBookmark(articleUI.article.id)
+            toggleArticleBookmarkUseCase(articleUI)
         }
     }
 
@@ -110,20 +108,6 @@ class HomeViewModel(
         val article = articles[index]
         val isOpen = article.isOptionsMenuOpen
         articles[index] = article.copy(isOptionsMenuOpen = !isOpen)
-        articleIDsWithMenuOpen.addOrRemove(article.article.id, Unit)
-
-    }
-
-    private suspend fun loadArticles(page: Int, countryCode: String): Throwable? {
-        return articleRepository.loadArticles(page, countryCode).exceptionOrNull()
-    }
-
-    private fun Article.toUI() = ArticleUI(this, articleIDsWithMenuOpen.containsKey(id))
-    private fun <K, V> MutableMap<K, V>.addOrRemove(key: K, value: V) {
-        if (containsKey(key)) {
-            remove(key)
-        } else {
-            put(key, value)
-        }
+        articleIDsWithMenuOpen.addOrRemove(article.article.id)
     }
 }
