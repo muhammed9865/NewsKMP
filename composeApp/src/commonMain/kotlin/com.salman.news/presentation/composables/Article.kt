@@ -20,9 +20,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,6 +43,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.salman.news.MR
 import com.salman.news.core.DateTimeUtil
+import com.salman.news.logger.Logger
+import com.salman.news.presentation.common.hasReachedItemAt
 import com.salman.news.presentation.model.ArticleUI
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.painterResource
@@ -95,7 +96,7 @@ fun ArticleItem(
                 Spacer(Modifier.weight(1f))
                 ArticleLabelsWithBookmark(
                     isBookmarked = article.isSaved,
-                    labels = listOf(article.author, article.source.name),
+                    labels = article.labels.toList(),
                     onBookmarkClicked = onBookmarkClicked
                 )
             }
@@ -179,11 +180,12 @@ fun LoadingArticleItem(modifier: Modifier = Modifier) {
 fun ArticlesList(
     modifier: Modifier = Modifier,
     articles: List<ArticleUI>,
-    onMuteAuthor: (ArticleUI) -> Unit = {},
-    onMuteSource: (ArticleUI) -> Unit = {},
-    onOptionsMenuClicked: (ArticleUI) -> Unit = {},
-    onBookmarkClicked: (ArticleUI) -> Unit = {},
-    onArticleClicked: (ArticleUI) -> Unit,
+    isLoadingMoreArticles: Boolean = false,
+    onMuteAuthor: (ArticleUI, Int) -> Unit = { _, _ -> },
+    onMuteSource: (ArticleUI, Int) -> Unit = { _, _ -> },
+    onOptionsMenuClicked: (ArticleUI, Int) -> Unit = { _, _ -> },
+    onBookmarkClicked: (ArticleUI, Int) -> Unit = { _, _ -> },
+    onArticleClicked: (ArticleUI, Int) -> Unit
 ) {
     val state = rememberLazyListState()
     LazyColumn(
@@ -192,15 +194,25 @@ fun ArticlesList(
         contentPadding = PaddingValues(vertical = Dimens.ItemsPadding),
         verticalArrangement = Arrangement.spacedBy(Dimens.ArticleItemPadding)
     ) {
-        items(articles, key = { it.article.id }) { article ->
+        itemsIndexed(articles, key = { _, it -> it.article.id }) { index, article ->
             ArticleItem(
                 articleUi = article,
-                onMuteAuthor = { onMuteAuthor(article) },
-                onMuteSource = { onMuteSource(article) },
-                onOptionsMenuClicked = { onOptionsMenuClicked(article) },
-                onBookmarkClicked = { onBookmarkClicked(article) },
-                onArticleClicked = onArticleClicked,
+                onMuteAuthor = { onMuteAuthor(article, index) },
+                onMuteSource = { onMuteSource(article, index) },
+                onOptionsMenuClicked = { onOptionsMenuClicked(article, index) },
+                onBookmarkClicked = { onBookmarkClicked(article, index) },
+                onArticleClicked = { onArticleClicked(article, index) },
             )
+        }
+
+        if (isLoadingMoreArticles) {
+            item {
+                Column(Modifier.fillMaxWidth()) {
+                    repeat(2) {
+                        LoadingArticleItem()
+                    }
+                }
+            }
         }
     }
 }
@@ -316,16 +328,16 @@ private fun ArticleLabelsWithBookmark(
     ) {
         labels.forEach {
             Label(
-                modifier = Modifier.widthIn(min = 60.dp),
-                label = it
+                modifier = Modifier.weight(2f),
+                label = it,
+                maxLines = 1,
             )
             Spacer(Modifier.width(8.dp))
         }
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.weight(1.5f))
         DefaultIcon(
-            modifier = Modifier
-                .clickable { onBookmarkClicked() },
             painter = bookmarkIcon,
+            onClick = { onBookmarkClicked() }
         )
     }
 }

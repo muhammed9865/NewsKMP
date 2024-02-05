@@ -14,6 +14,7 @@ data class Article(
     val author: String,
     val source: ArticleSource,
     val imageUrl: String,
+    val articleUrl: String,
     val isSaved: Boolean,
 ) {
     val labels: Set<String>

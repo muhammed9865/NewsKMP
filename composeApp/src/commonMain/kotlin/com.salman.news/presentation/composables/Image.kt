@@ -1,6 +1,7 @@
 package com.salman.news.presentation.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -46,12 +47,14 @@ fun DefaultIcon(
     contentDescription: String? = null,
     tint: Color = MaterialTheme.colorScheme.primary,
     containerColor: Color = Color.Transparent,
-    contentPadding: PaddingValues = PaddingValues(8.dp)
+    contentPadding: PaddingValues = PaddingValues(8.dp),
+    onClick: (() -> Unit)? = null
 ) {
     Box(
         modifier = Modifier
             .clip(MaterialTheme.shapes.large)
             .background(containerColor)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(contentPadding)
             .then(modifier),
         contentAlignment = Alignment.Center

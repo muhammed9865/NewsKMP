@@ -15,9 +15,9 @@ class ArticlesRemoteDataSourceImpl(
 ) : ArticlesRemoteDataSource {
     override suspend fun getTopHeadlines(page: Int, countryCode: String): Result<ArticlesDTO> {
         return runCatching {
-            val response = client.get("top-headlines") {
+            val response = client.get("everything") {
                 parameter("page", page)
-                parameter("country", countryCode)
+                parameter("q", countryCode)
             }.body<ArticlesDTO>().filterRemoved()
 
 

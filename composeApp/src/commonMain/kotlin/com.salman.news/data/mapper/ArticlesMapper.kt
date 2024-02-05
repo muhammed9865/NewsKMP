@@ -37,6 +37,7 @@ fun ArticleEntity.toDomain(): DomainArticle {
         author,
         source.toDomain(),
         imageUrl ?: ImageUrlGenerator.get(),
+        articleUrl,
         isSaved
     )
 }

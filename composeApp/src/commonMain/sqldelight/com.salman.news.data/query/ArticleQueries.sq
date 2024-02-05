@@ -29,8 +29,8 @@ FROM Article AS A
 JOIN Source AS S ON A.source_name = S.name
 WHERE A.is_saved = 1;
 
-insertOrReplaceArticle:
-INSERT OR REPLACE INTO Article
+insertArticle:
+INSERT OR IGNORE INTO Article
 VALUES ?;
 
 updateArticle: -- Add columns as needed, currently only provided columns are used for updating.

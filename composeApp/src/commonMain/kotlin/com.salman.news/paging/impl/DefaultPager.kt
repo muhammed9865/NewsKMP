@@ -1,5 +1,6 @@
 package com.salman.news.paging.impl
 
+import com.salman.news.logger.Logger
 import com.salman.news.paging.Pager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,16 +33,16 @@ open class DefaultPager<Key, ItemType>(
         }
         onLoadingUpdated(true)
         withContext(mutex) {
-            launch {
-                println("Logger: Started loading next items")
+            requestJob = launch {
+                Logger.debug(this@DefaultPager, "Loading items")
                 val result = onRequest(currentKey).getOrElse {
-                    println("Logger: Loading items failed $it")
+                    Logger.warn(this@DefaultPager, "Loading items failed", it)
                     onLoadingUpdated(false)
                     onError(it)
                     return@launch
                 }
 
-                println("Logger: Loading items succeeded")
+                Logger.debug(this@DefaultPager, "Loading items succeeded")
                 onLoadingUpdated(false)
                 val isInitialPage = currentKey == initialKey
                 currentKey = getNextKey(currentKey)

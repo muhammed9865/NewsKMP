@@ -22,7 +22,7 @@ class FakeArticleRepositoryImpl : ArticleRepository {
 
     override suspend fun loadArticles(page: Int, countryCode: String): Result<Unit> {
         items.getOrPut(page) {
-            ModelUtil.remoteFakeArticles(2000, idOffset = articleIdOffset).also { articles ->
+            ModelUtil.remoteFakeArticles(2000).also { articles ->
                 println(articles.map { it.id })
                 articleIdOffset = articles.maxOf { it.id } + 1
             }

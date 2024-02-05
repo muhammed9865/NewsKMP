@@ -59,6 +59,6 @@ val sharedDataModule = module {
     }
 
     single<ArticleRepository> {
-        FakeArticleRepositoryImpl()
+        ArticleRepositoryImpl(get(), get())
     }
 }
