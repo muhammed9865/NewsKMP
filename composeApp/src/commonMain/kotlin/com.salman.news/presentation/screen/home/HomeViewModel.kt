@@ -2,8 +2,6 @@ package com.salman.news.presentation.screen.home
 
 import androidx.compose.runtime.mutableStateListOf
 import com.salman.news.core.CoroutineViewModel
-import com.salman.news.core.Resource
-import com.salman.news.core.addOrRemove
 import com.salman.news.domain.repository.ArticleRepository
 import com.salman.news.domain.usecases.GetArticlesFlowUseCase
 import com.salman.news.domain.usecases.ToggleArticleBookmarkUseCase
@@ -11,7 +9,6 @@ import com.salman.news.presentation.common.ArticleItemPager
 import com.salman.news.presentation.model.ArticleUI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -44,26 +41,6 @@ class HomeViewModel(
                     articles.addAll(it)
                 }
         }
-
-        scope.launch {
-            pager.pagingState.collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        _state.update { it.copy(isLoadingMoreArticles = true) }
-                    }
-
-                    is Resource.Success -> {
-                        _state.update { it.copy(isLoadingMoreArticles = false) }
-                    }
-
-                    is Resource.Error -> {
-                        _state.update { it.copy(failedToLoadMoreArticles = true) }
-                    }
-                    else -> {}
-                }
-
-            }
-        }
     }
 
     fun loadInitialArticles(countryCode: String) {
@@ -74,15 +51,6 @@ class HomeViewModel(
             _state.value = currState.copy(
                 isLoadingInitialArticles = false,
             )
-        }
-    }
-
-    fun loadMoreArticles() {
-        if (countryCode == null)
-            return
-
-        scope.launchIO {
-            pager.loadNextPage(countryCode!!)
         }
     }
 
