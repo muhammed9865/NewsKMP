@@ -8,7 +8,7 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.salman.news.MR
 import com.salman.news.presentation.screen.bookmark.BookmarksScreen
 import com.salman.news.presentation.screen.home.HomeScreen
-import com.salman.news.presentation.screen.settings.SettingsScreen
+import com.salman.news.presentation.screen.more.MoreScreen
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 
@@ -65,16 +65,16 @@ sealed class NavigationTab : Tab {
             }
     }
 
-    data object Settings : NavigationTab() {
+    data object More : NavigationTab() {
         @Composable
         override fun Content() {
-            SettingsScreen().Content()
+            MoreScreen().Content()
         }
 
         override val options: TabOptions
             @Composable
             get() {
-                val title = stringResource(MR.strings.settings)
+                val title = stringResource(MR.strings.more)
                 val iconId = if (isCurrentScreen()) {
                     MR.images.ic_settings_filled
                 } else MR.images.ic_settings_outlined
@@ -88,6 +88,6 @@ sealed class NavigationTab : Tab {
 
     companion object {
         val tabs: List<NavigationTab>
-            get() = listOf(Home, Settings, Bookmarks)
+            get() = listOf(Home, More, Bookmarks)
     }
 }

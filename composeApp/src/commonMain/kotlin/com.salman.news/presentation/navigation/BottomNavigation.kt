@@ -116,7 +116,7 @@ class BottomNavigationScreen : Screen {
             ) {
                 BottomNavigationItem(NavigationTab.Home)
                 BottomNavigationItem(NavigationTab.Bookmarks)
-                BottomNavigationItem(NavigationTab.Settings)
+                BottomNavigationItem(NavigationTab.More)
             }
         }
     }
