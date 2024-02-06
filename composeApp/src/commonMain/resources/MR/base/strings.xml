@@ -8,4 +8,6 @@
     <string name="continue_reading">Continue reading</string>
     <string name="mute_author">Mute Author</string>
     <string name="mute_source">Mute Source</string>
+    <string name="empty_bookmarks">You didn\'t bookmark any article</string>
+    <string name="read_articles">Read Articles</string>
 </resources>

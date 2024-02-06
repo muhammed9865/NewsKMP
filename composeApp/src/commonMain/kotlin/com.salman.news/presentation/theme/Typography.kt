@@ -31,7 +31,7 @@ fun Typography() = run {
         ),
         bodyMedium = TextStyle(
             fontFamily = jomolhariFontFamily,
-            fontSize = 10.sp
+            fontSize = 12.sp
         ),
         bodySmall = TextStyle(
             fontFamily = jomolhariFontFamily,

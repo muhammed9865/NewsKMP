@@ -30,4 +30,5 @@ abstract class CoroutineViewModel : ScreenModel {
     )
 
     suspend inline fun <T> onIO(noinline block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.IO, block)
+    suspend inline fun <T> onMain(noinline block: suspend CoroutineScope.() -> T) = withContext(Dispatchers.Main, block)
 }

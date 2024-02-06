@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 /**
@@ -33,6 +34,15 @@ class FakeArticleRepositoryImpl : ArticleRepository {
 
     override suspend fun getArticlesFlow(): Flow<List<Article>> {
         return itemsFlow
+    }
+
+    override suspend fun getBookmarkedArticlesFlow(): Flow<List<Article>> {
+        return flow {
+            val articles = ModelUtil.fakeArticles().map {
+                it.copy(isSaved = true)
+            }
+            emit(articles)
+        }
     }
 
     override suspend fun toggleArticleBookmark(id: Long) {
