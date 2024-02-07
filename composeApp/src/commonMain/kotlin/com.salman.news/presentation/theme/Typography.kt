@@ -25,13 +25,17 @@ fun Typography() = run {
             fontFamily = jomhuriaFontFamily,
             fontSize = 28.sp
         ),
+        titleSmall = TextStyle(
+            fontFamily = jomhuriaFontFamily,
+            fontSize = 22.sp
+        ),
         bodyLarge = TextStyle(
             fontFamily = jomolhariFontFamily,
             fontSize = 14.sp
         ),
         bodyMedium = TextStyle(
             fontFamily = jomolhariFontFamily,
-            fontSize = 12.sp
+            fontSize = 10.sp
         ),
         bodySmall = TextStyle(
             fontFamily = jomolhariFontFamily,
