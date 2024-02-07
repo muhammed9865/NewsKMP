@@ -1,10 +1,5 @@
 package com.salman.news.presentation.navigation
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,14 +53,13 @@ class BottomNavigationScreen : Screen {
                     }
                 },
                 topBar = {
-                    AnimatedVerticalVisibility(visible = currentTab != null) {
-                        TopAppBar(currentTab ?: return@AnimatedVerticalVisibility, topAppbarScrollBehavior)
-                    }
+                    TopAppBar(
+                        currentTab!!,
+                        topAppbarScrollBehavior
+                    )
                 },
                 bottomBar = {
-                    AnimatedVerticalVisibility(visible = currentTab != null) {
-                        BottomAppBar()
-                    }
+                    BottomAppBar()
                 }
             )
         }
@@ -121,16 +115,4 @@ class BottomNavigationScreen : Screen {
         }
     }
 
-    @Composable
-    private fun AnimatedVerticalVisibility(
-        visible: Boolean,
-        content: @Composable AnimatedVisibilityScope.() -> Unit
-    ) {
-        AnimatedVisibility(
-            visible = visible,
-            enter = slideInVertically(tween()),
-            exit = slideOutVertically(tween()),
-            content = content
-        )
-    }
 }
