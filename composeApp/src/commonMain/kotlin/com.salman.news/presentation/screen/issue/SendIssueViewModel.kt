@@ -3,6 +3,7 @@ package com.salman.news.presentation.screen.issue
 import com.salman.news.core.CoroutineViewModel
 import com.salman.news.domain.usecases.SendIssueUseCase
 import com.salman.news.domain.usecases.ValidateIssueInputUseCase
+import com.salman.news.logger.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -59,6 +60,7 @@ class SendIssueViewModel(
         val state = mutableState.value
         val result = sendIssueUseCase(state.email, state.message)
         if (result.isFailure) {
+            Logger.error(this, "Error", result.exceptionOrNull()!!)
             mutableState.update { it.copy(error = result.exceptionOrNull()) }
             return
         } else {

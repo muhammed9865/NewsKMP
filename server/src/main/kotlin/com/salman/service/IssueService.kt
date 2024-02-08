@@ -1,6 +1,6 @@
 package com.salman.service
 
-import com.salman.news.model.Issue
+import com.salman.news.model.IssueDTO
 import com.salman.news.model.IssueRequest
 import com.salman.news.model.IssueStatus
 import com.salman.plugins.DatabaseSingleton
@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.select
 
 class IssueService {
 
-    suspend fun saveIssue(issueRequest: IssueRequest): Result<Issue> {
+    suspend fun saveIssue(issueRequest: IssueRequest): Result<IssueDTO> {
         return DatabaseSingleton.dbQuery {
             val insertResult = Issues.insert {
                 it[email] = issueRequest.email
@@ -28,7 +28,7 @@ class IssueService {
         }
     }
 
-    suspend fun getIssueByID(id: Int): Issue? {
+    suspend fun getIssueByID(id: Int): IssueDTO? {
         return DatabaseSingleton.dbQuery {
             Issues.select {
                 Issues.id.eq(id)
@@ -38,7 +38,7 @@ class IssueService {
         }
     }
 
-    private fun ResultRow.toIssue() = Issue(
+    private fun ResultRow.toIssue() = IssueDTO(
         id = this[Issues.id],
         email = this[Issues.email],
         description = this[Issues.description],

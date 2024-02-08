@@ -1,8 +1,16 @@
 plugins {
-    alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinx.serialization)
 }
 
-dependencies {
-    implementation(libs.kotlinx.serialization.json)
+kotlin {
+    jvm()
+    iosX64()
+    iosArm64()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
 }

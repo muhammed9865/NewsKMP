@@ -3,7 +3,7 @@ package com.salman.news.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Issue(
+data class IssueDTO(
     val id: Int,
     val email: String,
     val description: String,
