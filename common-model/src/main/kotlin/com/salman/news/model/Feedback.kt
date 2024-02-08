@@ -3,10 +3,10 @@ package com.salman.news.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Issue(
+data class Feedback(
     val id: Int,
-    val email: String,
-    val description: String,
-    val issueStatus: IssueStatus,
+    val platform: String,
+    val userRating: Int,
+    val note: String,
     val issuedAt: Long
 )

@@ -1,7 +1,7 @@
 package com.salman.plugins
 
+import com.salman.table.FeedbackTable
 import com.salman.table.Issues
-import com.salman.util.BuildUtil
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -9,6 +9,9 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseSingleton {
+    private const val DB_NAME = "news_db"
+    private const val DRIVER_CLASS_NAME = "org.h2.Driver"
+    private const val JDBC_URL = "jdbc:h2:file:./build/database/$DB_NAME"
 
     fun init() {
         connect()
@@ -19,22 +22,15 @@ object DatabaseSingleton {
     }
 
     private fun connect() {
-        val jdbcUrl = if (BuildUtil.isDevelopmentMode()) {
-            "jdbc:h2://localhost:3306/dev_news_db"
-        } else {
-            "jdbc:h2://production:3306/prod_news_db"
-        }
-        val driver = "org.h2.Driver"
-        println("Connecting to $jdbcUrl")
-
+        println("Connecting to $JDBC_URL")
         // Connect to the database
-        val database = Database.connect(jdbcUrl, driver)
+        val database = Database.connect(JDBC_URL, DRIVER_CLASS_NAME)
         database.createTables()
     }
 
     private fun Database.createTables() {
         transaction(this) {
-            SchemaUtils.create(Issues)
+            SchemaUtils.create(Issues, FeedbackTable)
         }
     }
 }
