@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
  */
 @Immutable
 object Dimens {
+    val ScreenPadding = 19.dp
     val ItemsPadding = 10.dp
     val ArticleItemPadding = 2.dp
     val LabelContentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp)
