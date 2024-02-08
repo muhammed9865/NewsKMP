@@ -1,6 +1,6 @@
 package com.salman.plugins
 
-import com.salman.entity.Issues
+import com.salman.table.Issues
 import com.salman.util.BuildUtil
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database
