@@ -8,4 +8,5 @@ plugins {
     alias(libs.plugins.sqlDelight) apply false
     alias(libs.plugins.kotlinx.serialization) apply false
     alias(libs.plugins.mokoResources) apply false
+    alias(libs.plugins.kotlinJvm) apply false
 }

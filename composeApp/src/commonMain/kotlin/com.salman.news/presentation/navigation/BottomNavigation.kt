@@ -70,8 +70,8 @@ class BottomNavigationScreen : Screen {
     private fun TopAppBar(currentTab: Tab, scrollBehavior: TopAppBarScrollBehavior) {
         val density = LocalDensity.current
         val windowInsets = WindowInsets(
-            left = Dimens.ItemsPadding,
-            right = Dimens.ItemsPadding,
+            left = Dimens.ScreenPadding,
+            right = Dimens.ScreenPadding,
             top = TopAppBarDefaults.windowInsets.getTop(density).dp,
             bottom = TopAppBarDefaults.windowInsets.getBottom(density).dp,
         )

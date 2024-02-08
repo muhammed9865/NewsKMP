@@ -2,6 +2,7 @@ package com.salman.news.presentation.screen.more
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,13 +13,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import com.salman.news.MR
 import com.salman.news.presentation.LocalTopNavigator
+import com.salman.news.presentation.composables.Header
+import com.salman.news.presentation.composables.NOutlinedButton
 import com.salman.news.presentation.screen.ScreenModifier
+import com.salman.news.presentation.screen.issue.SendIssueDialogScreen
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 
 /**
@@ -28,27 +36,33 @@ class MoreScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalTopNavigator.current
-        Column(
-            ScreenModifier,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Header(header = stringResource(MR.strings.settings))
-            SettingScreen.settings().forEach {
-                SettingScreen(setting = it) {
-                    navigator.push(it.destination())
+        val viewModel: MoreViewModel = getScreenModel()
+        val issueDialogVisible by viewModel.issueDialogVisible.collectAsState()
+
+        Box(ScreenModifier) {
+            if (issueDialogVisible) {
+                SendIssueDialogScreen {
+                    viewModel.toggleIssueDialogVisibility()
+                }.Content()
+            }
+            Column(
+                ScreenModifier,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Header(header = stringResource(MR.strings.settings))
+                SettingScreen.settings().forEach {
+                    SettingScreen(setting = it) {
+                        navigator.push(it.destination())
+                    }
                 }
+                NOutlinedButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = stringResource(MR.strings.having_issue),
+                    onClick = { viewModel.toggleIssueDialogVisibility() },
+                    icon = painterResource(MR.images.ic_contact_support)
+                )
             }
         }
-    }
-
-    @Composable
-    private fun Header(modifier: Modifier = Modifier, header: String) {
-        Text(
-            modifier = modifier,
-            text = header,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
     }
 
     @Composable

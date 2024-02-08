@@ -7,6 +7,7 @@ package com.salman.news.data.source.remote.constants
  */
 interface RemoteConstants {
 
-    fun getBaseUrl(): String
-    fun getAPIKey(): String
+    fun getNewsApiBaseUrl(): String
+    fun getServerBaseUrl(): String
+    fun getNewsApiKey(): String
 }

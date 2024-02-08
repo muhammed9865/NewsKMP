@@ -10,6 +10,6 @@ expect  fun getHttpClient(): HttpClientEngine
 
 internal class CustomHttpLogger : Logger {
     override fun log(message: String) {
-        println(message)
+        com.salman.news.logger.Logger.debug(this, message)
     }
 }
