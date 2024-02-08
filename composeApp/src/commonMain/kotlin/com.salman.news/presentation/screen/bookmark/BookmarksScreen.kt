@@ -28,6 +28,7 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import com.salman.news.MR
 import com.salman.news.presentation.composables.ArticlesList
 import com.salman.news.presentation.composables.LoadingArticlesList
+import com.salman.news.presentation.composables.NOutlinedButton
 import com.salman.news.presentation.navigation.NavigationTab
 import com.salman.news.presentation.navigation.firstParent
 import com.salman.news.presentation.screen.details.ArticleDetailsScreen
@@ -103,17 +104,11 @@ class BookmarksScreen : Screen {
                     }
                 }
             )
-            OutlinedButton(
+            NOutlinedButton(
                 onClick = onReadArticlesClicked,
                 modifier = Modifier.width(buttonWidth),
-                shape = MaterialTheme.shapes.small,
-                contentPadding = PaddingValues(vertical = 3.dp)
-            ) {
-                Text(
-                    stringResource(MR.strings.read_articles),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+                text = stringResource(MR.strings.read_articles)
+            )
         }
     }
 }
