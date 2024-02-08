@@ -16,4 +16,13 @@
     <string name="screen_mode">Screen Mode</string>
     <string name="give_us_feedback">Give us Feedback</string>
     <string name="having_issue">Having any issue while using the app?</string>
+    <string name="issue_sent_successfully">Your issue has been sent successfully</string>
+    <string name="email">Email</string>
+    <string name="what_is_the_issue">What\'s the issue?</string>
+    <string name="send_issue">Send issue</string>
+    <string name="having_an_issue">Having an issue? Write us a message!</string>
+    <string name="we_will_get_back_to_you">We will get back to you as soon as possible.</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="invalid_email">The email is invalid, please enter it correctly</string>
+    <string name="invalid_issue_message">Message cannot be empty, please write the issue</string>
 </resources>
