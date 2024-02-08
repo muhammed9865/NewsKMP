@@ -15,5 +15,5 @@ val useCasesModule = module {
     factory { GetArticlesFlowUseCase(get()) }
     factory { ToggleArticleBookmarkUseCase(get()) }
     factory { ValidateIssueInputUseCase() }
-    factory { SendIssueUseCase() }
+    factory { SendIssueUseCase(get()) }
 }

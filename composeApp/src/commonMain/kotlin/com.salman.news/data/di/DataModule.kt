@@ -1,13 +1,17 @@
 package com.salman.news.data.di
 
 import com.salman.news.data.repository.ArticleRepositoryImpl
+import com.salman.news.data.repository.IssueRepositoryImpl
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import com.salman.news.data.source.remote.CustomHttpLogger
+import com.salman.news.data.source.remote.IssueRemoteDataSource
 import com.salman.news.data.source.remote.constants.RemoteConstants
 import com.salman.news.data.source.remote.constants.RemoteConstantsImpl
 import com.salman.news.data.source.remote.getHttpClient
 import com.salman.news.data.source.remote.impl.ArticlesRemoteDataSourceImpl
+import com.salman.news.data.source.remote.impl.IssueRemoteDataSourceImpl
 import com.salman.news.domain.repository.ArticleRepository
+import com.salman.news.domain.repository.IssueRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -48,7 +52,15 @@ val sharedDataModule = module {
         ArticlesRemoteDataSourceImpl(get(), get())
     }
 
+    single<IssueRemoteDataSource> {
+        IssueRemoteDataSourceImpl(get(), get())
+    }
+
     single<ArticleRepository> {
         ArticleRepositoryImpl(get(), get())
+    }
+
+    single<IssueRepository> {
+        IssueRepositoryImpl(get())
     }
 }
