@@ -25,4 +25,9 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="invalid_email">The email is invalid, please enter it correctly</string>
     <string name="invalid_issue_message">Message cannot be empty, please write the issue</string>
+    <string name="feedback">Feedback</string>
+    <string name="rate_your_experience">Rate your experience</string>
+    <string name="tell_us_what_can_be_improved">Tell us what can be improved</string>
+    <string name="tell_us_how_can_we_improve">Tell us how can we improve</string>
+    <string name="submit_feedback">Submit Feedback</string>
 </resources>
