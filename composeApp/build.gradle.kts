@@ -85,6 +85,7 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.coroutines.core)
+            implementation(libs.multiplatform.settings)
             implementation(projects.commonModel)
         }
 
