@@ -11,5 +11,5 @@ data class FeedbackState(
     val isSentSuccessfully: Boolean = false
 ) {
     val isSubmissionEnabled: Boolean
-        get() = rating > 0 && message.isNotBlank()
+        get() = rating > 0
 }
