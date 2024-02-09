@@ -1,6 +1,7 @@
 package com.salman.news.presentation.di
 
 import com.salman.news.presentation.screen.bookmark.BookmarkViewModel
+import com.salman.news.presentation.screen.feedback.FeedbackViewModel
 import com.salman.news.presentation.screen.home.HomeViewModel
 import com.salman.news.presentation.screen.issue.SendIssueViewModel
 import com.salman.news.presentation.screen.more.MoreViewModel
@@ -15,4 +16,5 @@ val viewModelModule = module {
     factory { BookmarkViewModel(get(), get(), get()) }
     factory { SendIssueViewModel(get(), get()) }
     factory { MoreViewModel() }
+    factory { FeedbackViewModel(get(), get()) }
 }

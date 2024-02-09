@@ -6,4 +6,26 @@
     <color name="metabolic_blue_10a">#0A3C4F76</color>
     <color name="charcoal_blue">#383F51</color>
     <color name="quick_silver">#AB9F9D</color>
+
+    <!-- Rating Star colors -->
+    <color name="star_rate_first">
+        <light>#F30000</light>
+        <dark>#F30000</dark>
+    </color>
+    <color name="star_rate_second">
+        <light>#FFA800</light>
+        <dark>#FFA800</dark>
+    </color>
+    <color name="star_rate_third">
+        <light>#FAFF00</light>
+        <dark>#FAFF00</dark>
+    </color>
+    <color name="star_rate_fourth">
+        <light>#9CFA94</light>
+        <dark>#9CFA94</dark>
+    </color>
+    <color name="star_rate_fifth">
+        <light>#42BD08</light>
+        <dark>#42BD08</dark>
+    </color>
 </resources>

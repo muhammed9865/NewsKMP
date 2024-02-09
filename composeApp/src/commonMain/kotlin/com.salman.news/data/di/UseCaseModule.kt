@@ -1,10 +1,6 @@
 package com.salman.news.data.di
 
-import com.salman.news.domain.usecases.GetArticlesFlowUseCase
-import com.salman.news.domain.usecases.GetBookmarkedArticlesFlowUseCase
-import com.salman.news.domain.usecases.SendIssueUseCase
-import com.salman.news.domain.usecases.ToggleArticleBookmarkUseCase
-import com.salman.news.domain.usecases.ValidateIssueInputUseCase
+import com.salman.news.domain.usecases.*
 import org.koin.dsl.module
 
 /**
@@ -16,4 +12,6 @@ val useCasesModule = module {
     factory { ToggleArticleBookmarkUseCase(get()) }
     factory { ValidateIssueInputUseCase() }
     factory { SendIssueUseCase(get()) }
+    factory { SendFeedbackUseCase(get()) }
+    factory { ValidateFeedbackInputUseCase() }
 }
