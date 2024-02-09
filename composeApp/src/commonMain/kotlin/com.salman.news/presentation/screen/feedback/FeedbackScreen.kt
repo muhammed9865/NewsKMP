@@ -1,14 +1,14 @@
 package com.salman.news.presentation.screen.feedback
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,16 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import com.salman.news.MR
+import com.salman.news.domain.exception.InvalidFeedbackMessageException
+import com.salman.news.domain.exception.InvalidRatingException
 import com.salman.news.presentation.LocalTopNavigator
-import com.salman.news.presentation.composables.DefaultIcon
-import com.salman.news.presentation.composables.NPrimaryButton
-import com.salman.news.presentation.composables.ScreenWithNavigationButton
+import com.salman.news.presentation.composables.*
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.colorResource
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
-import kotlinx.coroutines.delay
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 2/6/2024.
@@ -36,41 +36,54 @@ class FeedbackScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalTopNavigator.current
-        var rate by remember { mutableIntStateOf(0) }
-        var text by remember { mutableStateOf("") }
-        var hasSubmit by remember { mutableStateOf(false) }
-        var isLoading by remember { mutableStateOf(false) }
-        LaunchedEffect(hasSubmit) {
-            if (hasSubmit) {
-                isLoading = true
-                delay(2000)
-                isLoading = false
-                hasSubmit = false
-            }
-        }
-        ScreenWithNavigationButton(
-            title = stringResource(MR.strings.feedback),
-            onBackPressed = { navigator.pop() },
+        val viewModel: FeedbackViewModel = getScreenModel()
+        val state by viewModel.state.collectAsState()
+        ContainerWithError(
+            error = state.error?.let { getErrorMessage(it) },
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding)
+            if (state.isSentSuccessfully) {
+                SuccessDialog(
+                    text = stringResource(MR.strings.thank_you_for_feedback),
+                    onDismiss = { navigator.pop() }
+                )
+            }
+
+            ScreenWithNavigationButton(
+                title = stringResource(MR.strings.feedback),
+                onBackPressed = { navigator.pop() },
             ) {
-                RatingSection(
-                    rate = rate,
-                    onRateChange = { rate = it }
-                )
-                MessageSection(
-                    modifier = Modifier.weight(1f),
-                    text = text,
-                    onTextChange = { text = it },
-                )
-                NPrimaryButton(
-                    text = stringResource(MR.strings.submit_feedback),
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding)
                 ) {
-                    hasSubmit = true
+                    RatingSection(
+                        rate = state.rating,
+                        onRateChange = viewModel::onRatingChanged
+                    )
+                    MessageSection(
+                        modifier = Modifier.weight(1f),
+                        text = state.message,
+                        onTextChange = viewModel::onMessageChanged
+                    )
+                    NPrimaryButton(
+                        text = stringResource(MR.strings.submit_feedback),
+                        isLoading = state.isSending,
+                        enabled = state.isSubmissionEnabled
+                    ) {
+                        viewModel.sendFeedback()
+                    }
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun getErrorMessage(throwable: Throwable): String {
+        return when (throwable) {
+            is InvalidRatingException -> stringResource(MR.strings.please_select_rating)
+            is InvalidFeedbackMessageException -> stringResource(MR.strings.invalid_issue_message)
+            else -> stringResource(MR.strings.something_went_wrong)
         }
     }
 

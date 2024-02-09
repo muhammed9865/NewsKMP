@@ -30,4 +30,6 @@
     <string name="tell_us_what_can_be_improved">Tell us what can be improved</string>
     <string name="tell_us_how_can_we_improve">Tell us how can we improve</string>
     <string name="submit_feedback">Submit Feedback</string>
+    <string name="please_select_rating">Please select a rating before submission!</string>
+    <string name="thank_you_for_feedback">Thank you for your feedback!</string>
 </resources>
