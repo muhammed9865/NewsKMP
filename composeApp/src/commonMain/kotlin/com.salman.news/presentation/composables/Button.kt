@@ -26,6 +26,7 @@ fun NPrimaryButton(
     text: String,
     icon: Painter? = null,
     isLoading: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     ElevatedButton(
@@ -33,6 +34,7 @@ fun NPrimaryButton(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.small,
         contentPadding = PaddingValues(vertical = 3.dp),
+        enabled = enabled,
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
