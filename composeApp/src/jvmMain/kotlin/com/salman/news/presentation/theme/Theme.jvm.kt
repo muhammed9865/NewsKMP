@@ -13,7 +13,7 @@ actual fun NewsTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = LightColorScheme,
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography(),
         content = content
     )
