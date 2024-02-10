@@ -14,4 +14,6 @@ val useCasesModule = module {
     factory { SendIssueUseCase(get()) }
     factory { SendFeedbackUseCase(get()) }
     factory { ValidateFeedbackInputUseCase() }
+    factory { GetScreenModeFlowUseCase(get()) }
+    factory { SetScreenModeUseCase(get()) }
 }
