@@ -1,4 +1,4 @@
-package com.salman.news.data.source.local
+package com.salman.news.core
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/26/2024.

@@ -3,7 +3,7 @@ package com.salman.news.data.source.local.impl
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.salman.news.data.source.local.ArticlesLocalDataSource
-import com.salman.news.data.source.local.IDHashGenerator
+import com.salman.news.core.IDHashGenerator
 import com.salman.news.data.source.local.entity.ArticleEntity
 import com.salman.news.data.source.local.entity.SourceEntity
 import com.salman.news.data.source.remote.model.article.Article
@@ -11,7 +11,6 @@ import com.salman.news.data.source.remote.model.article.Source
 import com.salman.news.database.NewsDatabase
 import comsalmannewsdata.query.GetArticles
 import comsalmannewsdata.query.GetSavedArticles
-import comsalmannewsdata.table.BlockList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.coroutines.coroutineContext

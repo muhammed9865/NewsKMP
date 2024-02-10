@@ -1,7 +1,7 @@
 package com.salman.news.presentation.model
 
 import com.salman.news.core.ImageUrlGenerator
-import com.salman.news.data.source.local.IDHashGenerator
+import com.salman.news.core.IDHashGenerator
 import com.salman.news.domain.model.Article
 import com.salman.news.domain.model.ArticleSource
 import kotlinx.coroutines.delay

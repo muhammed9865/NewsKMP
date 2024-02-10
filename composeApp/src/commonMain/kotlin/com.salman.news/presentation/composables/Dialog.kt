@@ -32,7 +32,7 @@ fun SuccessDialog(
     text: String,
     icon: Painter? = null,
     dismissAfterMs: Duration = 2000.milliseconds,
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit = {},
 ) {
     LaunchedEffect(Unit) {
         delay(dismissAfterMs)

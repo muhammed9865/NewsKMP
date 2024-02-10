@@ -1,10 +1,16 @@
 package com.salman.news.data.di
 
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.ObservableSettings
+import com.russhwolf.settings.Settings
+import com.russhwolf.settings.coroutines.toFlowSettings
 import com.salman.news.data.repository.ArticleRepositoryImpl
 import com.salman.news.data.repository.FeedbackRepositoryImpl
 import com.salman.news.data.repository.IssueRepositoryImpl
+import com.salman.news.data.repository.PreferencesRepositoryImpl
+import com.salman.news.data.source.local.PreferencesLocalDataSource
+import com.salman.news.data.source.local.impl.PreferencesLocalDataSourceImpl
 import com.salman.news.data.source.remote.*
-import com.salman.news.data.source.remote.CustomHttpLogger
 import com.salman.news.data.source.remote.constants.RemoteConstants
 import com.salman.news.data.source.remote.constants.RemoteConstantsImpl
 import com.salman.news.data.source.remote.impl.ArticlesRemoteDataSourceImpl
@@ -13,12 +19,12 @@ import com.salman.news.data.source.remote.impl.IssueRemoteDataSourceImpl
 import com.salman.news.domain.repository.ArticleRepository
 import com.salman.news.domain.repository.FeedbackRepository
 import com.salman.news.domain.repository.IssueRepository
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.serialization.kotlinx.json.json
+import com.salman.news.domain.repository.PreferencesRepository
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
@@ -61,6 +67,13 @@ val sharedDataModule = module {
         FeedbackRemoteDataSourceImpl(get(), get())
     }
 
+    @OptIn(ExperimentalSettingsApi::class)
+    single<PreferencesLocalDataSource> {
+        val settings = Settings()
+        val flowSettings = (settings as ObservableSettings).toFlowSettings()
+        PreferencesLocalDataSourceImpl(flowSettings)
+    }
+
     single<ArticleRepository> {
         ArticleRepositoryImpl(get(), get())
     }
@@ -71,5 +84,9 @@ val sharedDataModule = module {
 
     single<FeedbackRepository> {
         FeedbackRepositoryImpl(get())
+    }
+
+    single<PreferencesRepository> {
+        PreferencesRepositoryImpl(get())
     }
 }

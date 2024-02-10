@@ -25,8 +25,8 @@ fun ScreenWithNavigationButton(
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             TonalIconButton(painter = painterResource(MR.images.baseline_arrow_back_24), onClick = onBackPressed)
-            Spacer(Modifier.width(8.dp))
-            Text(title, style = MaterialTheme.typography.titleLarge)
+            Spacer(Modifier.width(16.dp))
+            Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
         }
         Spacer(Modifier.height(32.dp))
         content()
