@@ -9,12 +9,12 @@ import androidx.compose.ui.graphics.Color
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/27/2024.
  */
 val DarkColorScheme = darkColorScheme(
-    primary = MetabolicBlue,
-    onPrimary = Color.White,
-    background = Color.White,
-    onBackground = MetabolicBlue,
-    primaryContainer = QuickSilver20A,
-    onPrimaryContainer = CharcoalBlue,
+    primary = Color.White,
+    onPrimary = MetabolicBlue,
+    background = Color.Black,
+    onBackground = Color.White,
+    primaryContainer = CharcoalBlue,
+    onPrimaryContainer = Color.White,
 )
 
 val LightColorScheme = lightColorScheme(
@@ -25,7 +25,7 @@ val LightColorScheme = lightColorScheme(
     primaryContainer = QuickSilver20A,
     onPrimaryContainer = CharcoalBlue,
     surface = AzuerishWhite,
-    onSurface = MetabolicBlue
+    onSurface = MetabolicBlue,
 )
 
 @Composable
