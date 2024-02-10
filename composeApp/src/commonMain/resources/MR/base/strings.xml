@@ -39,4 +39,8 @@
     <string name="screen_mode_Aa">Aa</string>
     <string name="save">Save</string>
     <string name="screen_mode_changed">Screen mode changed successfully!</string>
+    <string name="block_list">Block List</string>
+    <string name="blocked_authors">Blocked Authors</string>
+    <string name="blocked_sources">Blocked Sources</string>
+    <string name="clear_block_list">Clear Block List</string>
 </resources>

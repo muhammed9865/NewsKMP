@@ -9,12 +9,14 @@ import androidx.compose.ui.graphics.Color
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/27/2024.
  */
 val DarkColorScheme = darkColorScheme(
-    primary = Color.White,
-    onPrimary = MetabolicBlue,
-    background = Color.Black,
-    onBackground = Color.White,
-    primaryContainer = CharcoalBlue,
-    onPrimaryContainer = Color.White,
+    primary = Color(0xFF64B5F6), // A shade of blue
+    onPrimary = Color.White,
+    background = Color(0xFF212121), // Dark background
+    onBackground = Color.White, // Light text on dark background
+    primaryContainer = Color(0xFF455A64), // Dark gray
+    onPrimaryContainer = Color.White, // Light text on dark gray
+    surface = Color(0xFF303030), // Dark surface color
+    onSurface = Color.White, // Light text on dark surface
 )
 
 val LightColorScheme = lightColorScheme(

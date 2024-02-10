@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -171,15 +170,7 @@ class FeedbackScreen : Screen {
                     onValueChange = onTextChange,
                     shape = MaterialTheme.shapes.medium,
                     label = { Text(stringResource(MR.strings.tell_us_how_can_we_improve)) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        errorContainerColor = MaterialTheme.colorScheme.error,
-                        errorTextColor = MaterialTheme.colorScheme.onErrorContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent
-                    ),
+                    colors = NTextFieldDefaults,
 
                 )
             }
