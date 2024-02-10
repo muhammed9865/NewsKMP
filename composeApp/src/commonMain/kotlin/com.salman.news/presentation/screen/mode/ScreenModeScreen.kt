@@ -112,7 +112,7 @@ class ScreenModeScreen : Screen {
         val sizeScale by animateFloatAsState(if (isSelected) 1.05f else 1f)
         val borderColor = if (isSelected) Color.Green else MaterialTheme.colorScheme.surface
         Column(modifier) {
-            Text(screenMode, style = MaterialTheme.typography.bodyLarge)
+            Text(screenMode, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
             Spacer(modifier = Modifier.height(Dimens.ItemsPadding))
 
             Surface(

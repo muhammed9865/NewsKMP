@@ -66,6 +66,7 @@ fun SuccessDialog(
                 Text(
                     text = text,
                     style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                 )
             }
