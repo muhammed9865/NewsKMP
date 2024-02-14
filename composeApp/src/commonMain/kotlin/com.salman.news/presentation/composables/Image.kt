@@ -36,7 +36,7 @@ fun TonalIconButton(
         colors = IconButtonDefaults.filledTonalIconButtonColors(containerColor = containerColor),
         shape = MaterialTheme.shapes.large,
     ) {
-        Icon(painter, contentDescription, tint = tint)
+        Icon(painter, contentDescription, tint = tint.copy(alpha = 0.5f))
     }
 }
 
