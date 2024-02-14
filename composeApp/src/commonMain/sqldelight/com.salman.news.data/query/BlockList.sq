@@ -1,0 +1,14 @@
+getBlockList:
+SELECT * FROM BlockList;
+
+blockItem:
+INSERT OR REPLACE INTO BlockList (source_name, author)
+VALUES (?, ?);
+
+unblockItem:
+DELETE FROM BlockList
+WHERE id = :id;
+
+clearBlockList:
+DELETE FROM BlockList;
+
