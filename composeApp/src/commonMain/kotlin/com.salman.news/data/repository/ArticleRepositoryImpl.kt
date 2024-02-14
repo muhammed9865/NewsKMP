@@ -5,7 +5,9 @@ import com.salman.news.data.source.local.ArticlesLocalDataSource
 import com.salman.news.data.source.remote.ArticlesRemoteDataSource
 import com.salman.news.data.source.remote.model.article.Source
 import com.salman.news.domain.model.Article
+import com.salman.news.domain.model.ArticleAuthor
 import com.salman.news.domain.model.ArticleSource
+import com.salman.news.domain.model.BlockListedItem
 import com.salman.news.domain.repository.ArticleRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -57,19 +59,23 @@ class ArticleRepositoryImpl(
         }
     }
 
+    override suspend fun getAllSources(): Flow<List<ArticleSource>> {
+        return localDataSource.getSources().map { entities ->
+            entities.map { it.toDomain() }
+        }
+    }
+
+    override suspend fun getAllAuthors(): Flow<List<ArticleAuthor>> {
+        return localDataSource.getAuthors().map { entities ->
+            entities.map { ArticleAuthor(it) }
+        }
+    }
+
     override suspend fun toggleArticleBookmark(id: Long) {
         val articleEntity = localDataSource.getArticleById(id) ?: return
         val isSaved = articleEntity.isSaved
         val updatedArticle = articleEntity.copy(isSaved = !isSaved)
 
         localDataSource.updateArticle(updatedArticle)
-    }
-
-    override suspend fun muteSource(source: ArticleSource) {
-        localDataSource.muteSource(Source(source.id, source.name))
-    }
-
-    override suspend fun muteAuthor(author: String) {
-        localDataSource.muteAuthor(author)
     }
 }

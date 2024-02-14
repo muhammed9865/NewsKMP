@@ -2,8 +2,8 @@ package com.salman.news.data.source.local.impl
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.salman.news.data.source.local.ArticlesLocalDataSource
 import com.salman.news.core.IDHashGenerator
+import com.salman.news.data.source.local.ArticlesLocalDataSource
 import com.salman.news.data.source.local.entity.ArticleEntity
 import com.salman.news.data.source.local.entity.SourceEntity
 import com.salman.news.data.source.remote.model.article.Article
@@ -71,6 +71,25 @@ class ArticlesLocalDataSourceImpl(
         }
     }
 
+    override suspend fun getSources(): Flow<List<SourceEntity>> {
+        return articleQueries
+            .getSources()
+            .asFlow()
+            .mapToList(coroutineContext)
+            .map { entities ->
+                entities.map {
+                    SourceEntity(it.source_id, it.source_name)
+                }
+            }
+    }
+
+    override suspend fun getAuthors(): Flow<List<String>> {
+        return articleQueries
+            .getAuthors()
+            .asFlow()
+            .mapToList(coroutineContext)
+    }
+
     override suspend fun updateArticle(article: ArticleEntity) {
         articleQueries.updateArticle(
             is_saved = article.isSaved.toLong(),
@@ -111,13 +130,6 @@ class ArticlesLocalDataSourceImpl(
         }
     }
 
-    override suspend fun muteSource(source: Source) {
-        articleQueries.muteSource(source_name = source.name, author = null)
-    }
-
-    override suspend fun muteAuthor(author: String) {
-        articleQueries.muteSource(source_name = null, author = author)
-    }
 
     private fun GetArticles.mapToArticleEntity(): ArticleEntity {
         val source = SourceEntity(source_id, source_name)

@@ -14,10 +14,11 @@ import dev.icerock.moko.resources.compose.painterResource
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 2/8/2024.
  */
 @Composable
-fun ScreenWithNavigationButton(
+fun ScreenWithTopBar(
     modifier: Modifier = Modifier,
     title: String,
     onBackPressed: () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     Column(
@@ -27,6 +28,10 @@ fun ScreenWithNavigationButton(
             TonalIconButton(painter = painterResource(MR.images.baseline_arrow_back_24), onClick = onBackPressed)
             Spacer(Modifier.width(16.dp))
             Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.primary)
+            Spacer(Modifier.weight(1f))
+            Row(horizontalArrangement = Arrangement.End) {
+                actions()
+            }
         }
         Spacer(Modifier.height(32.dp))
         content()

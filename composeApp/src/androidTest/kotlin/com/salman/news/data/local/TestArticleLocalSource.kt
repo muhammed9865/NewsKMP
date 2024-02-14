@@ -33,6 +33,8 @@ class TestArticleLocalSource {
     private lateinit var source: ArticlesLocalDataSource
     private lateinit var driver: SqlDriver
     private lateinit var database: NewsDatabase
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val testCoroutineContext = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
     @Before
     fun setup() {
@@ -93,7 +95,7 @@ class TestArticleLocalSource {
 
         // When
         val returnedItems = mutableListOf<List<ArticleEntity>>()
-        backgroundScope.launch(UnconfinedTestDispatcher(TestCoroutineScheduler())) {
+        backgroundScope.launch(testCoroutineContext) {
             source.getArticlesFlow().toList(returnedItems)
         }
         source.insertArticles(items)
@@ -103,7 +105,6 @@ class TestArticleLocalSource {
         Assert.assertTrue(returnedItems.size > 0)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun addingNewSourcesTriggersTheArticlesFlow() = runTest {
         // Given
@@ -122,7 +123,7 @@ class TestArticleLocalSource {
 
         // When
         val returnedItems = mutableListOf<List<ArticleEntity>>()
-        backgroundScope.launch(UnconfinedTestDispatcher(TestCoroutineScheduler())) {
+        backgroundScope.launch(testCoroutineContext) {
             source.getArticlesFlow().toList(returnedItems)
         }
         source.insertSources(items.map { it.source })
@@ -132,7 +133,6 @@ class TestArticleLocalSource {
         Assert.assertTrue(returnedItems.size > 0)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun togglingBookmarkTriggersTheArticlesFlow() = runTest {
         // Given
@@ -152,7 +152,7 @@ class TestArticleLocalSource {
 
         // When
         val returnedItems = mutableListOf<List<ArticleEntity>>()
-        backgroundScope.launch(UnconfinedTestDispatcher(TestCoroutineScheduler())) {
+        backgroundScope.launch(coroutineContext) {
             source.getArticlesFlow().toList(returnedItems)
         }
         source.insertArticles(items)

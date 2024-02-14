@@ -38,7 +38,22 @@ UPDATE Article
 SET is_saved = :is_saved
 WHERE id = :id;
 
-muteSource:
-INSERT OR REPLACE INTO BlockList (source_name, author)
-VALUES (?, ?);
+getSources:
+SELECT DISTINCT A.source_name, S.id AS source_id
+FROM Article AS A
+JOIN Source AS S ON A.source_name = S.name
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM BlockList AS BL
+    WHERE BL.source_name = A.source_name
+);
 
+getAuthors:
+SELECT DISTINCT A.author FROM Article AS A
+WHERE author IS NOT NULL
+AND author != ''
+AND NOT EXISTS (
+    SELECT 1
+    FROM BlockList AS BL
+    WHERE BL.author = A.author
+);
