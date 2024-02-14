@@ -2,8 +2,8 @@ package com.salman.news.presentation.composables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -51,21 +51,20 @@ fun NBasicTextField(
             value = text,
             innerTextField = innerTextField,
             shape = MaterialTheme.shapes.medium,
-            enabled = enabled,
-            singleLine = singleLine,
-            label = label?.let {
-                {
-                    Text(
-                        it,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
+            label = {
+                label?.let {
+                    Text(it)
                 }
             },
+            enabled = enabled,
+            singleLine = singleLine,
             visualTransformation = VisualTransformation.None,
             interactionSource = MutableInteractionSource(),
             colors = NTextFieldDefaults,
             contentPadding = PaddingValues(vertical = 4.dp, horizontal = 8.dp),
+            container = {
+                Box {}
+            }
         )
     }
 }
