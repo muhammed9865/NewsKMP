@@ -16,4 +16,12 @@ val useCasesModule = module {
     factory { ValidateFeedbackInputUseCase() }
     factory { GetScreenModeFlowUseCase(get()) }
     factory { SetScreenModeUseCase(get()) }
+    factory { GetBlockedSourcesFlowUseCase(get()) }
+    factory { GetBlockedAuthorsFlowUseCase(get()) }
+    factory { RemoveItemFromBlockListUseCase(get()) }
+    factory { GetAllSourcesUseCase(get()) }
+    factory { GetAllAuthorsUseCase(get()) }
+    factory { BlockSourceUseCase(get()) }
+    factory { BlockAuthorUseCase(get()) }
+    factory { ClearBlackListUseCase(get()) }
 }

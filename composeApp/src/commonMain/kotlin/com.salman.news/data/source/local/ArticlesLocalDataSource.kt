@@ -1,6 +1,8 @@
 package com.salman.news.data.source.local
 
 import com.salman.news.data.source.local.entity.ArticleEntity
+import com.salman.news.data.source.local.entity.BlockListedEntity
+import com.salman.news.data.source.local.entity.SourceEntity
 import com.salman.news.data.source.remote.model.article.Article
 import com.salman.news.data.source.remote.model.article.Source
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +20,7 @@ interface ArticlesLocalDataSource {
     suspend fun insertArticles(articles: List<Article>)
 
     suspend fun insertSources(sources: List<Source>)
-    suspend fun muteSource(source: Source)
-    suspend fun muteAuthor(author: String)
+    suspend fun getSources(): Flow<List<SourceEntity>>
+    suspend fun getAuthors(): Flow<List<String>>
 
 }

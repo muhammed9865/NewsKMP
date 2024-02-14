@@ -5,10 +5,13 @@ import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.coroutines.toFlowSettings
 import com.salman.news.data.repository.ArticleRepositoryImpl
+import com.salman.news.data.repository.BlockListRepositoryImpl
 import com.salman.news.data.repository.FeedbackRepositoryImpl
 import com.salman.news.data.repository.IssueRepositoryImpl
 import com.salman.news.data.repository.PreferencesRepositoryImpl
+import com.salman.news.data.source.local.BlockListLocalDataSource
 import com.salman.news.data.source.local.PreferencesLocalDataSource
+import com.salman.news.data.source.local.impl.BlockListLocalDataSourceImpl
 import com.salman.news.data.source.local.impl.PreferencesLocalDataSourceImpl
 import com.salman.news.data.source.remote.*
 import com.salman.news.data.source.remote.constants.RemoteConstants
@@ -17,6 +20,7 @@ import com.salman.news.data.source.remote.impl.ArticlesRemoteDataSourceImpl
 import com.salman.news.data.source.remote.impl.FeedbackRemoteDataSourceImpl
 import com.salman.news.data.source.remote.impl.IssueRemoteDataSourceImpl
 import com.salman.news.domain.repository.ArticleRepository
+import com.salman.news.domain.repository.BlockListRepository
 import com.salman.news.domain.repository.FeedbackRepository
 import com.salman.news.domain.repository.IssueRepository
 import com.salman.news.domain.repository.PreferencesRepository
@@ -74,6 +78,10 @@ val sharedDataModule = module {
         PreferencesLocalDataSourceImpl(flowSettings)
     }
 
+    single<BlockListLocalDataSource> {
+        BlockListLocalDataSourceImpl(get())
+    }
+
     single<ArticleRepository> {
         ArticleRepositoryImpl(get(), get())
     }
@@ -88,5 +96,9 @@ val sharedDataModule = module {
 
     single<PreferencesRepository> {
         PreferencesRepositoryImpl(get())
+    }
+
+    single<BlockListRepository> {
+        BlockListRepositoryImpl(get())
     }
 }

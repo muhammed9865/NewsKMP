@@ -1,7 +1,9 @@
 package com.salman.news.data.repository
 
 import com.salman.news.domain.model.Article
+import com.salman.news.domain.model.ArticleAuthor
 import com.salman.news.domain.model.ArticleSource
+import com.salman.news.domain.model.BlockListedItem
 import com.salman.news.domain.repository.ArticleRepository
 import com.salman.news.presentation.model.ModelUtil
 import io.ktor.util.collections.ConcurrentMap
@@ -9,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
@@ -63,12 +66,12 @@ class FakeArticleRepositoryImpl : ArticleRepository {
         emit()
     }
 
-    override suspend fun muteSource(source: ArticleSource) {
-        // Not needed
+    override suspend fun getAllSources(): Flow<List<ArticleSource>> {
+        return emptyFlow()
     }
 
-    override suspend fun muteAuthor(author: String) {
-        // Not needed
+    override suspend fun getAllAuthors(): Flow<List<ArticleAuthor>> {
+        return emptyFlow()
     }
 
     private suspend fun emit() {

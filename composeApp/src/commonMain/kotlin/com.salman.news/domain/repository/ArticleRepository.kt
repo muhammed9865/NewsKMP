@@ -1,7 +1,9 @@
 package com.salman.news.domain.repository
 
 import com.salman.news.domain.model.Article
+import com.salman.news.domain.model.ArticleAuthor
 import com.salman.news.domain.model.ArticleSource
+import com.salman.news.domain.model.BlockListedItem
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -13,6 +15,8 @@ interface ArticleRepository {
     suspend fun getArticlesFlow(): Flow<List<Article>>
     suspend fun getBookmarkedArticlesFlow(): Flow<List<Article>>
     suspend fun toggleArticleBookmark(id: Long)
-    suspend fun muteSource(source: ArticleSource)
-    suspend fun muteAuthor(author: String)
+
+    suspend fun getAllSources(): Flow<List<ArticleSource>>
+    suspend fun getAllAuthors(): Flow<List<ArticleAuthor>>
+
 }
