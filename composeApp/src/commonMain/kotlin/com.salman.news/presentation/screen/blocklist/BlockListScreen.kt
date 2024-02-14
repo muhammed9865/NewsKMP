@@ -1,119 +1,226 @@
 package com.salman.news.presentation.screen.blocklist
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import com.salman.news.MR
-import com.salman.news.domain.model.ArticleSource
+import com.salman.news.core.Resource
+import com.salman.news.domain.model.BlockListedItem
 import com.salman.news.presentation.LocalTopNavigator
 import com.salman.news.presentation.composables.ContainerWithError
 import com.salman.news.presentation.composables.NPrimaryButton
-import com.salman.news.presentation.composables.NBasicTextField
-import com.salman.news.presentation.composables.ScreenWithNavigationButton
-import com.salman.news.presentation.model.ModelUtil
+import com.salman.news.presentation.composables.ScreenWithTopBar
+import com.salman.news.presentation.composables.ShimmerContainer
+import com.salman.news.presentation.composables.TonalIconButton
 import com.salman.news.presentation.theme.Dimens
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 2/6/2024.
  */
 class BlockListScreen : Screen {
+
     @Composable
     override fun Content() {
         val navigator = LocalTopNavigator.current
-        val articles = ModelUtil.fakeArticles()
-        val sources = articles.map { it.source }
-        val authors = articles.map { it.author }
+        val viewModel: BlockListViewModel = getScreenModel()
+        val state by viewModel.state.collectAsState()
 
         ContainerWithError {
-            ScreenWithNavigationButton(
+            ScreenWithTopBar(
                 title = stringResource(MR.strings.block_list),
-                onBackPressed = { navigator.pop() }
+                onBackPressed = { navigator.pop() },
+                actions = {
+                    TonalIconButton(
+                        painter = painterResource(MR.images.ic_add),
+                        onClick = viewModel::toggleBlockNewItems
+                    )
+                }
             ) {
-                Column {
+                if (state.showBlockNewItems) {
+                    BlockNewItemsBottomSheet().Content(
+                        onDismiss = viewModel::toggleBlockNewItems,
+                        onAuthorItemClicked = viewModel::blockAuthor,
+                        onSourceItemClicked = viewModel::blockSource,
+                        sources = state.allSources,
+                        authors = state.allAuthors,
+                    )
+                }
+                Column(
+                    modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                ) {
                     BlockedSourcesSection(
                         modifier = Modifier.fillMaxWidth()
                             .weight(1.5f),
-                        sources = sources
+                        sources = state.blockedSources,
+                        onRemoveClicked = viewModel::removeItem
                     )
                     Spacer(modifier = Modifier.weight(0.2f))
                     BlockedAuthorsSection(
                         modifier = Modifier.fillMaxWidth()
                             .weight(1.5f),
-                        authors = authors
+                        authors = state.blockedAuthors,
+                        onRemoveClicked = viewModel::removeItem
                     )
+                    Spacer(modifier = Modifier.weight(0.2f))
                     NPrimaryButton(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(Dimens.ScreenPadding),
+                        modifier = Modifier.fillMaxWidth(),
                         text = stringResource(MR.strings.clear_block_list),
-                        onClick = {}
+                        onClick = viewModel::clearBlackList
                     )
                 }
             }
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun BlockedSourcesSection(
         modifier: Modifier = Modifier,
-        sources: List<ArticleSource>,
-        onRemoveClicked: (ArticleSource) -> Unit = {},
+        sources: Resource<List<BlockListedItem>>,
+        onRemoveClicked: (BlockListedItem) -> Unit = {},
     ) {
-        var sourceQuery by remember { mutableStateOf("") }
         Container(
             modifier = modifier,
             title = stringResource(MR.strings.blocked_sources),
-            searchQuery = sourceQuery,
-            onSearchQueryChanged = { sourceQuery = it }
         ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding),
-                contentPadding = PaddingValues(Dimens.ItemsPadding)
-            ) {
-                items(sources) { source ->
-                    ItemContainer(
-                        text = source.name,
-                        onRemoveClicked = { onRemoveClicked(source) }
-                    )
+            when (sources) {
+                is Resource.Success -> {
+                    val sourcesList = sources.data
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding),
+                        contentPadding = PaddingValues(Dimens.ItemsPadding)
+                    ) {
+                        items(sourcesList, key = { it.id }) { source ->
+                            BlockedItemContainer(
+                                modifier = Modifier.animateItemPlacement(),
+                                text = source.source!!,
+                                onRemoveClicked = { onRemoveClicked(source) }
+                            )
+                        }
+                    }
                 }
+
+                is Resource.Loading -> {
+                    LoadingItemsContainer()
+                }
+
+                is Resource.Error -> {
+                    EmptyListContainer(stringResource(MR.strings.you_dont_have_blocked_sources))
+                }
+
+                else -> {}
             }
         }
     }
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun BlockedAuthorsSection(
         modifier: Modifier = Modifier,
-        authors: List<String>,
-        onRemoveClicked: (String) -> Unit = {},
+        authors: Resource<List<BlockListedItem>>,
+        onRemoveClicked: (BlockListedItem) -> Unit = {},
     ) {
-        var authorQuery by remember { mutableStateOf("") }
         Container(
             modifier = modifier,
             title = stringResource(MR.strings.blocked_authors),
-            searchQuery = authorQuery,
-            onSearchQueryChanged = { authorQuery = it }
         ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding),
-                contentPadding = PaddingValues(Dimens.ItemsPadding)
-            ) {
-                items(authors) { author ->
-                    ItemContainer(
-                        text = author,
-                        onRemoveClicked = { onRemoveClicked(author) }
+            when (authors) {
+                is Resource.Success -> {
+                    val authorsList = authors.data
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding),
+                        contentPadding = PaddingValues(Dimens.ItemsPadding)
+                    ) {
+                        items(authorsList, key = { it.id }) { author ->
+                            BlockedItemContainer(
+                                modifier = Modifier.animateItemPlacement(),
+                                text = author.author!!,
+                                onRemoveClicked = { onRemoveClicked(author) }
+                            )
+                        }
+                    }
+                }
+
+                is Resource.Loading -> {
+                    LoadingItemsContainer()
+                }
+
+                is Resource.Error -> {
+                    EmptyListContainer(stringResource(MR.strings.you_dont_have_blocked_authors))
+                }
+
+                else -> {}
+            }
+
+        }
+    }
+
+
+
+    @Composable
+    private fun EmptyListContainer(message: String, modifier: Modifier = Modifier) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(message, color = MaterialTheme.colorScheme.onBackground)
+        }
+    }
+
+    @Composable
+    private fun LoadingItemsContainer(modifier: Modifier = Modifier) {
+        val items = 5
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(Dimens.ItemsPadding)
+        ) {
+            repeat(items) {
+                ShimmerContainer(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(Dimens.ItemsPadding)
+                        .clip(MaterialTheme.shapes.medium)
+                ) {
+                    Surface(
+                        content = {},
+                        modifier = Modifier.fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                            .border(
+                                2.dp,
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = MaterialTheme.shapes.medium
+                            )
+                            .padding(24.dp),
                     )
                 }
             }
@@ -121,7 +228,7 @@ class BlockListScreen : Screen {
     }
 
     @Composable
-    private fun ItemContainer(
+    private fun BlockedItemContainer(
         modifier: Modifier = Modifier,
         text: String,
         onRemoveClicked: () -> Unit = {},
@@ -131,7 +238,11 @@ class BlockListScreen : Screen {
             modifier = modifier.fillMaxWidth()
                 .shadow(elevation, MaterialTheme.shapes.medium)
                 .clip(MaterialTheme.shapes.medium)
-                .border(2.dp, color = MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.medium)
+                .border(
+                    2.dp,
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = MaterialTheme.shapes.medium
+                )
                 .background(MaterialTheme.colorScheme.background)
                 .padding(Dimens.ItemsPadding),
         ) {
@@ -146,7 +257,7 @@ class BlockListScreen : Screen {
                         .align(Alignment.CenterVertically),
                 )
                 Text(
-                    text = "Remove",
+                    text = stringResource(MR.strings.remove),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.medium)
@@ -161,8 +272,6 @@ class BlockListScreen : Screen {
     private fun Container(
         modifier: Modifier = Modifier,
         title: String = "",
-        searchQuery: String = "",
-        onSearchQueryChanged: (String) -> Unit = {},
         content: @Composable () -> Unit,
     ) {
         Column(modifier) {
@@ -176,21 +285,14 @@ class BlockListScreen : Screen {
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
-                // Implement search bar
-                NBasicTextField(
-                    modifier = Modifier.weight(1f),
-                    text = searchQuery,
-                    onTextChanged = onSearchQueryChanged
-                )
             }
             Spacer(modifier = Modifier.height(Dimens.ItemsPadding))
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-                    .padding(horizontal = Dimens.ScreenPadding),
-                contentAlignment = Alignment.Center,
+                    .animateContentSize(),
             ) {
                 content()
             }

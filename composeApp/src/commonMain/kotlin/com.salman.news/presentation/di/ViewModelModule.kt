@@ -1,5 +1,6 @@
 package com.salman.news.presentation.di
 
+import com.salman.news.presentation.screen.blocklist.BlockListViewModel
 import com.salman.news.presentation.screen.bookmark.BookmarkViewModel
 import com.salman.news.presentation.screen.feedback.FeedbackViewModel
 import com.salman.news.presentation.screen.home.HomeViewModel
@@ -13,10 +14,11 @@ import org.koin.dsl.module
  */
 
 val viewModelModule = module {
-    factory { HomeViewModel(get(), get(), get()) }
-    factory { BookmarkViewModel(get(), get(), get()) }
+    factory { HomeViewModel(get(), get(), get(), get(), get()) }
+    factory { BookmarkViewModel(get(), get(), get(), get()) }
     factory { SendIssueViewModel(get(), get()) }
     factory { MoreViewModel() }
     factory { FeedbackViewModel(get(), get()) }
     factory { ScreenModeViewModel(get(), get()) }
+    factory { BlockListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

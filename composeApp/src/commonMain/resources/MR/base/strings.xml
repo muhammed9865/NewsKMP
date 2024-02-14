@@ -43,4 +43,9 @@
     <string name="blocked_authors">Blocked Authors</string>
     <string name="blocked_sources">Blocked Sources</string>
     <string name="clear_block_list">Clear Block List</string>
+    <string name="you_dont_have_blocked_authors">You don\'t have any blocked authors!</string>
+    <string name="you_dont_have_blocked_sources">You don\'t have any blocked sources!</string>
+    <string name="remove">Remove</string>
+    <string name="sources">Sources</string>
+    <string name="authors">Authors</string>
 </resources>
