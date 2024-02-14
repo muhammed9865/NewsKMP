@@ -27,7 +27,7 @@ import com.salman.news.domain.model.ScreenMode
 import com.salman.news.presentation.LocalTopNavigator
 import com.salman.news.presentation.composables.ContainerWithError
 import com.salman.news.presentation.composables.NPrimaryButton
-import com.salman.news.presentation.composables.ScreenWithNavigationButton
+import com.salman.news.presentation.composables.ScreenWithTopBar
 import com.salman.news.presentation.composables.SuccessDialog
 import com.salman.news.presentation.theme.DarkColorScheme
 import com.salman.news.presentation.theme.Dimens
@@ -45,7 +45,7 @@ class ScreenModeScreen : Screen {
         val state by viewModel.state.collectAsState()
 
         ContainerWithError(error = state.error?.message) {
-            ScreenWithNavigationButton(
+            ScreenWithTopBar(
                 title = stringResource(MR.strings.screen_mode),
                 onBackPressed = { navigator.pop() }
             ) {

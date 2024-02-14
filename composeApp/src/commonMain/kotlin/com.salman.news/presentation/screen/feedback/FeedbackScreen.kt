@@ -47,7 +47,7 @@ class FeedbackScreen : Screen {
                 )
             }
 
-            ScreenWithNavigationButton(
+            ScreenWithTopBar(
                 title = stringResource(MR.strings.feedback),
                 onBackPressed = { navigator.pop() },
             ) {

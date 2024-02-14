@@ -4,25 +4,25 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshotFlow
 import com.salman.news.core.CoroutineViewModel
 import com.salman.news.core.addOrRemove
-import com.salman.news.domain.repository.ArticleRepository
+import com.salman.news.domain.usecases.BlockAuthorUseCase
+import com.salman.news.domain.usecases.BlockSourceUseCase
 import com.salman.news.domain.usecases.GetBookmarkedArticlesFlowUseCase
 import com.salman.news.domain.usecases.ToggleArticleBookmarkUseCase
 import com.salman.news.logger.Logger
 import com.salman.news.presentation.model.ArticleUI
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 /**
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 2/5/2024.
  */
 class BookmarkViewModel(
-    private val articleRepository: ArticleRepository,
     private val getBookmarkedArticles: GetBookmarkedArticlesFlowUseCase,
     private val toggleArticleBookmarkUseCase: ToggleArticleBookmarkUseCase,
+    private val blockSourceUseCase: BlockSourceUseCase,
+    private val blockAuthorUseCase: BlockAuthorUseCase,
 ) : CoroutineViewModel() {
 
     private var articleIDsWithMenuOpen = hashSetOf<Long>()
@@ -66,13 +66,13 @@ class BookmarkViewModel(
 
     fun muteAuthor(article: ArticleUI) {
         scope.launchIO {
-            articleRepository.muteAuthor(article.article.author)
+            blockAuthorUseCase(article.article.author)
         }
     }
 
     fun muteSource(article: ArticleUI) {
         scope.launchIO {
-            articleRepository.muteSource(article.article.source)
+            blockSourceUseCase(article.article.source)
         }
     }
 

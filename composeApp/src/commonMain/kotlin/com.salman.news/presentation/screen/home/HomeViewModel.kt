@@ -4,6 +4,8 @@ import androidx.compose.runtime.mutableStateListOf
 import com.salman.news.core.CoroutineViewModel
 import com.salman.news.core.addOrRemove
 import com.salman.news.domain.repository.ArticleRepository
+import com.salman.news.domain.usecases.BlockAuthorUseCase
+import com.salman.news.domain.usecases.BlockSourceUseCase
 import com.salman.news.domain.usecases.GetArticlesFlowUseCase
 import com.salman.news.domain.usecases.ToggleArticleBookmarkUseCase
 import com.salman.news.presentation.common.ArticleItemPager
@@ -16,7 +18,9 @@ import kotlinx.coroutines.launch
  * Created by Muhammed Salman email(mahmadslman@gmail.com) on 1/25/2024.
  */
 class HomeViewModel(
-    private val articleRepository: ArticleRepository,
+    articleRepository: ArticleRepository,
+    private val blockAuthorUseCase: BlockAuthorUseCase,
+    private val blockSourceUseCase: BlockSourceUseCase,
     private val getArticlesFlowUseCase: GetArticlesFlowUseCase,
     private val toggleArticleBookmarkUseCase: ToggleArticleBookmarkUseCase,
 ) : CoroutineViewModel() {
@@ -63,13 +67,13 @@ class HomeViewModel(
 
     fun muteAuthor(article: ArticleUI) {
         scope.launchIO {
-            articleRepository.muteAuthor(article.article.author)
+            blockAuthorUseCase(article.article.author)
         }
     }
 
     fun muteSource(article: ArticleUI) {
         scope.launchIO {
-            articleRepository.muteSource(article.article.source)
+            blockSourceUseCase(article.article.source)
         }
     }
 
