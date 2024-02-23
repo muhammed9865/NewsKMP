@@ -48,4 +48,6 @@
     <string name="remove">Remove</string>
     <string name="sources">Sources</string>
     <string name="authors">Authors</string>
+    <string name="what_are_you_looking_for">What are you looking for?</string>
+    <string name="search">Search</string>
 </resources>
