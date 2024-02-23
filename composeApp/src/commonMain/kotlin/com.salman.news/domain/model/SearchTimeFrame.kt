@@ -8,10 +8,10 @@ import com.salman.news.core.DateTimeUtil.getCurrentDateMinusDaysFormatted
 sealed class SearchTimeFrame(val date: String) {
     data object Last24Hours : SearchTimeFrame(getCurrentDateMinusDaysFormatted(1))
     data object Last7Days : SearchTimeFrame(getCurrentDateMinusDaysFormatted(7))
-    data object LastMonth : SearchTimeFrame(getCurrentDateMinusDaysFormatted(30))
+    data object Last14Days : SearchTimeFrame(getCurrentDateMinusDaysFormatted(14))
 
     companion object {
-        fun values() = setOf(Last24Hours, Last7Days, LastMonth)
+        fun values() = setOf(Last24Hours, Last7Days, Last14Days)
         val Default = Last24Hours
     }
 
