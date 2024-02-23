@@ -41,6 +41,7 @@ import com.salman.news.domain.model.SearchTimeFrame
 import com.salman.news.domain.model.Suggestion
 import com.salman.news.domain.model.SuggestionsGroup
 import com.salman.news.presentation.LocalTopNavigator
+import com.salman.news.presentation.common.extensions.dateStringResource
 import com.salman.news.presentation.composables.ContainerWithError
 import com.salman.news.presentation.composables.IndexedColorfulContainer
 import com.salman.news.presentation.composables.NTextFieldDefaults
@@ -206,7 +207,7 @@ class SearchScreen : Screen {
                         .background(backgroundColor)
                         .clickable { onSelectedTimeFrameChanged(it) }
                         .padding(4.dp),
-                    text = it.date,
+                    text = stringResource(it.dateStringResource),
                     style = MaterialTheme.typography.bodyMedium,
                     color = if (isSelected) {
                         MaterialTheme.colorScheme.onSurface
