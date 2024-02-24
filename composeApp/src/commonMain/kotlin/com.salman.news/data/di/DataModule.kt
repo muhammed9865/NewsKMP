@@ -9,6 +9,7 @@ import com.salman.news.data.repository.BlockListRepositoryImpl
 import com.salman.news.data.repository.FeedbackRepositoryImpl
 import com.salman.news.data.repository.IssueRepositoryImpl
 import com.salman.news.data.repository.PreferencesRepositoryImpl
+import com.salman.news.data.repository.SearchRepositoryImpl
 import com.salman.news.data.source.local.BlockListLocalDataSource
 import com.salman.news.data.source.local.PreferencesLocalDataSource
 import com.salman.news.data.source.local.impl.BlockListLocalDataSourceImpl
@@ -24,6 +25,7 @@ import com.salman.news.domain.repository.BlockListRepository
 import com.salman.news.domain.repository.FeedbackRepository
 import com.salman.news.domain.repository.IssueRepository
 import com.salman.news.domain.repository.PreferencesRepository
+import com.salman.news.domain.repository.SearchRepository
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -100,5 +102,9 @@ val sharedDataModule = module {
 
     single<BlockListRepository> {
         BlockListRepositoryImpl(get())
+    }
+
+    single<SearchRepository> {
+        SearchRepositoryImpl(get())
     }
 }

@@ -1,6 +1,7 @@
 package com.salman.news.data.mapper
 
 import com.salman.news.core.DateTimeUtil
+import com.salman.news.core.IDHashGenerator
 import com.salman.news.core.ImageUrlGenerator
 import com.salman.news.data.source.local.entity.ArticleEntity
 import com.salman.news.data.source.local.entity.SourceEntity
@@ -50,4 +51,22 @@ fun SourceEntity.toDTO(): Source {
 
 fun SourceEntity.toDomain(): ArticleSource {
     return ArticleSource(id ?: name, name)
+}
+
+fun Article.toDomain(): DomainArticle {
+    val author = author ?: source.name
+    val id =
+        IDHashGenerator.generate(title, source.name, url, author)
+    return DomainArticle(
+        id,
+        title,
+        description,
+        content,
+        DateTimeUtil.parseLocalDateTime(publishedAt),
+        author,
+        ArticleSource(source.id ?: source.name, source.name),
+        urlToImage ?: ImageUrlGenerator.get(),
+        url,
+        false
+    )
 }

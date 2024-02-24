@@ -24,4 +24,5 @@ val useCasesModule = module {
     factory { BlockSourceUseCase(get()) }
     factory { BlockAuthorUseCase(get()) }
     factory { ClearBlackListUseCase(get()) }
+    factory { SearchByQueryUseCase(get()) }
 }
