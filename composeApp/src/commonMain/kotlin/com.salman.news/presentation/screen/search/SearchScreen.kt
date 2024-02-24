@@ -14,17 +14,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import com.salman.news.MR
 import com.salman.news.domain.model.SearchTimeFrame
 import com.salman.news.domain.model.Suggestion
@@ -46,7 +49,6 @@ import com.salman.news.presentation.composables.ContainerWithError
 import com.salman.news.presentation.composables.IndexedColorfulContainer
 import com.salman.news.presentation.composables.NTextFieldDefaults
 import com.salman.news.presentation.composables.ScreenWithTopBar
-import com.salman.news.presentation.model.ModelUtil
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
@@ -58,8 +60,8 @@ class SearchScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalTopNavigator.current
-        var query by remember { mutableStateOf("") }
-        val suggestions = remember { mutableStateListOf<SuggestionsGroup>() }
+        val viewModel: SearchViewModel = getScreenModel()
+        val state by viewModel.state.collectAsState()
         ContainerWithError {
             ScreenWithTopBar(
                 title = stringResource(MR.strings.search),
@@ -67,17 +69,13 @@ class SearchScreen : Screen {
             ) {
                 Column {
                     SearchContent(
-                        query = query,
-                        selectedTimeFrame = SearchTimeFrame.Default,
-                        suggestions = suggestions,
-                        onQueryChanged = {
-                            query = it
-                            suggestions.clear()
-                            if (query.isNotBlank())
-                                suggestions.addAll(ModelUtil.fakeSuggestions())
-                        },
-                        onSearchClicked = {},
-                        onSelectedTimeFrameChanged = {},
+                        query = state.query,
+                        selectedTimeFrame = state.selectedTimeFrame,
+                        suggestions = state.suggestions,
+                        isSearching = state.isLoading,
+                        onQueryChanged = viewModel::onQueryChanged,
+                        onSearchClicked = { navigator.push(SearchResultScreen(state.query)) },
+                        onSelectedTimeFrameChanged = viewModel::onTimeFrameSelected,
                     )
                 }
             }
@@ -88,6 +86,7 @@ class SearchScreen : Screen {
     private fun SearchContent(
         modifier: Modifier = Modifier,
         query: String = "",
+        isSearching: Boolean = false,
         selectedTimeFrame: SearchTimeFrame = SearchTimeFrame.Default,
         suggestions: List<SuggestionsGroup> = emptyList(),
         onSuggestionClicked: (Suggestion) -> Unit = {},
@@ -100,43 +99,46 @@ class SearchScreen : Screen {
             modifier = modifier
                 .fillMaxWidth()
         ) {
-            AnimatedVisibility(
-                visible = suggestions.isNotEmpty(),
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) {
-                SuggestionsList(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.7f)
-                        .padding(top = 24.dp),
-                    suggestions = suggestions,
-                    onSuggestionClicked = onSuggestionClicked,
-                    headerPadding = PaddingValues(
-                        top = searchBarHeight.dp / 4,
-                        start = Dimens.ItemsPadding,
-                        end = Dimens.ItemsPadding
-                    )
-                )
-            }
             Column {
-                SearchBar(
-                    query = query,
-                    onQueryChanged = onQueryChanged,
-                    onSearchClicked = onSearchClicked,
-                    modifier = Modifier.onPlaced {
-                        searchBarHeight = it.size.height
+                Column {
+                    SearchBar(
+                        query = query,
+                        onQueryChanged = onQueryChanged,
+                        onSearchClicked = onSearchClicked,
+                        isSearching = isSearching,
+                        modifier = Modifier.onPlaced {
+                            searchBarHeight = it.size.height
+                        }
+                    )
+                    AnimatedVisibility(
+                        visible = suggestions.isEmpty(),
+                        enter = expandVertically(),
+                        exit = shrinkVertically(),
+                    ) {
+                        TimeFrameSelection(
+                            modifier = Modifier.padding(horizontal = Dimens.ItemsPadding),
+                            selectedTimeFrame = selectedTimeFrame,
+                            onSelectedTimeFrameChanged = onSelectedTimeFrameChanged
+                        )
                     }
-                )
+                }
+
                 AnimatedVisibility(
-                    visible = suggestions.isEmpty(),
+                    visible = suggestions.isNotEmpty(),
                     enter = expandVertically(),
                     exit = shrinkVertically(),
                 ) {
-                    TimeFrameSelection(
-                        modifier = Modifier.padding(horizontal = Dimens.ItemsPadding),
-                        selectedTimeFrame = selectedTimeFrame,
-                        onSelectedTimeFrameChanged = onSelectedTimeFrameChanged
+                    SuggestionsList(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.7f)
+                            .padding(horizontal = Dimens.ItemsPadding),
+                        suggestions = suggestions,
+                        onSuggestionClicked = onSuggestionClicked,
+                        headerPadding = PaddingValues(
+                            start = Dimens.ItemsPadding,
+                            end = Dimens.ItemsPadding
+                        )
                     )
                 }
             }
@@ -147,6 +149,7 @@ class SearchScreen : Screen {
     private fun SearchBar(
         modifier: Modifier = Modifier,
         query: String = "",
+        isSearching: Boolean = false,
         onQueryChanged: (String) -> Unit = {},
         onSearchClicked: () -> Unit = {},
     ) {
@@ -168,12 +171,18 @@ class SearchScreen : Screen {
             } else null,
             colors = NTextFieldDefaults,
             trailingIcon = {
-                IconButton(onSearchClicked) {
-                    Icon(
-                        painter = painterResource(MR.images.ic_search),
-                        contentDescription = null
+                if (isSearching) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
                     )
-                }
+                } else
+                    IconButton(onSearchClicked) {
+                        Icon(
+                            painter = painterResource(MR.images.ic_search),
+                            contentDescription = null
+                        )
+                    }
             }
         )
     }
@@ -247,6 +256,7 @@ class SearchScreen : Screen {
                     Text(
                         text = header,
                         style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(headerPadding)
