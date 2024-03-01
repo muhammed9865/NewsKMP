@@ -48,4 +48,10 @@
     <string name="remove">Remove</string>
     <string name="sources">Sources</string>
     <string name="authors">Authors</string>
+    <string name="what_are_you_looking_for">What are you looking for?</string>
+    <string name="search">Search</string>
+    <string name="last_24_hours">Last 24 hours</string>
+    <string name="last_7_days">Last 7 days</string>
+    <string name="last_14_days">Last 14 days</string>
+    <string name="empty_search">No articles found for your search</string>
 </resources>

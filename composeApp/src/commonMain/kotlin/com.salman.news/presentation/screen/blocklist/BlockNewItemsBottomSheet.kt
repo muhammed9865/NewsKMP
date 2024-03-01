@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -28,6 +26,7 @@ import com.salman.news.MR
 import com.salman.news.core.Resource
 import com.salman.news.domain.model.ArticleAuthor
 import com.salman.news.domain.model.ArticleSource
+import com.salman.news.presentation.composables.IndexedColorfulContainer
 import com.salman.news.presentation.composables.ShimmerContainer
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.stringResource
@@ -76,7 +75,7 @@ class BlockNewItemsBottomSheet {
                     title = stringResource(MR.strings.authors),
                     items = authors,
                 ) {
-                    itemsIndexed(it, key = { _, item -> item.name} ) { index, item ->
+                    itemsIndexed(it, key = { _, item -> item.name }) { index, item ->
                         ItemContainer(
                             modifier = Modifier.animateItemPlacement(),
                             index = index,
@@ -155,21 +154,20 @@ class BlockNewItemsBottomSheet {
         addPaddingToLastItem: Boolean = false,
         onAddItemClicked: () -> Unit
     ) {
-        val containerColor = if (index.isOdd()) {
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
-        } else {
-            MaterialTheme.colorScheme.background
-        }
-        Text(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(containerColor)
-                .clickable { onAddItemClicked() }
-                .padding(Dimens.ItemsPadding),
-            text = item,
-        )
-        if (addPaddingToLastItem) {
-            Spacer(modifier = Modifier.height(Dimens.ItemsPadding))
+        IndexedColorfulContainer(
+            modifier = modifier.fillMaxWidth(),
+            index = index
+        ) {
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .clickable { onAddItemClicked() }
+                    .padding(Dimens.ItemsPadding),
+                text = item,
+            )
+            if (addPaddingToLastItem) {
+                Spacer(modifier = Modifier.height(Dimens.ItemsPadding))
+            }
         }
     }
 

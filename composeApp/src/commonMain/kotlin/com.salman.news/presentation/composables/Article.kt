@@ -6,6 +6,7 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.ClickableText
@@ -32,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -43,8 +42,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.salman.news.MR
 import com.salman.news.core.DateTimeUtil
-import com.salman.news.logger.Logger
-import com.salman.news.presentation.common.hasReachedItemAt
 import com.salman.news.presentation.model.ArticleUI
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.painterResource
@@ -123,6 +120,7 @@ fun ArticleItem(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ArticlesList(
     modifier: Modifier = Modifier,
@@ -143,6 +141,7 @@ fun ArticlesList(
     ) {
         itemsIndexed(articles, key = { _, it -> it.article.id }) { index, article ->
             ArticleItem(
+                modifier = Modifier.animateItemPlacement(),
                 articleUi = article,
                 onMuteAuthor = { onMuteAuthor(article, index) },
                 onMuteSource = { onMuteSource(article, index) },

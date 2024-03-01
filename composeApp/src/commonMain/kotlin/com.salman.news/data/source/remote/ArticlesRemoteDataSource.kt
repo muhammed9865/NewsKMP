@@ -16,4 +16,5 @@ interface ArticlesRemoteDataSource {
      * @return [ArticlesDTO]
      */
     suspend fun getTopHeadlines(page: Int, countryCode: String): Result<ArticlesDTO>
+    suspend fun search(query: String, from: String): Result<ArticlesDTO>
 }

@@ -26,7 +26,9 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.salman.news.MR
+import com.salman.news.presentation.LocalTopNavigator
 import com.salman.news.presentation.composables.TonalIconButton
+import com.salman.news.presentation.screen.search.SearchScreen
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.painterResource
 
@@ -38,6 +40,7 @@ class BottomNavigationScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
+        val topNavigator = LocalTopNavigator.current
         TabNavigator(NavigationTab.Home) { navigator ->
             val currentTab = navigator.currentOrNull
             val topAppbarScrollBehavior =
@@ -55,7 +58,8 @@ class BottomNavigationScreen : Screen {
                 topBar = {
                     TopAppBar(
                         currentTab!!,
-                        topAppbarScrollBehavior
+                        topAppbarScrollBehavior,
+                        navigateToSearch = { topNavigator.push(SearchScreen())}
                     )
                 },
                 bottomBar = {
@@ -67,7 +71,11 @@ class BottomNavigationScreen : Screen {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun TopAppBar(currentTab: Tab, scrollBehavior: TopAppBarScrollBehavior) {
+    private fun TopAppBar(
+        currentTab: Tab,
+        scrollBehavior: TopAppBarScrollBehavior,
+        navigateToSearch: () -> Unit = {},
+    ) {
         val density = LocalDensity.current
         val windowInsets = WindowInsets(
             left = Dimens.ScreenPadding,
@@ -87,7 +95,7 @@ class BottomNavigationScreen : Screen {
                 },
                 actions = {
                     TonalIconButton(painter = painterResource(MR.images.ic_search)) {
-                        // TODO navigate to search screen
+                        navigateToSearch()
                     }
                 },
                 navigationIcon = {

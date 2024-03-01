@@ -7,6 +7,8 @@ import com.salman.news.presentation.screen.home.HomeViewModel
 import com.salman.news.presentation.screen.issue.SendIssueViewModel
 import com.salman.news.presentation.screen.mode.ScreenModeViewModel
 import com.salman.news.presentation.screen.more.MoreViewModel
+import com.salman.news.presentation.screen.search.SearchViewModel
+import com.salman.news.presentation.screen.search_result.SearchResultViewModel
 import org.koin.dsl.module
 
 /**
@@ -21,4 +23,6 @@ val viewModelModule = module {
     factory { FeedbackViewModel(get(), get()) }
     factory { ScreenModeViewModel(get(), get()) }
     factory { BlockListViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    factory { SearchViewModel(get()) }
+    factory { SearchResultViewModel(get(), get(), get(), get()) }
 }

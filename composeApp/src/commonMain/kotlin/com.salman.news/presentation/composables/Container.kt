@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,5 +55,25 @@ fun ContainerWithError(
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Composable
+fun IndexedColorfulContainer(
+    modifier: Modifier = Modifier,
+    index: Int,
+    content: @Composable () -> Unit
+) {
+    val containerColor = if (index % 2 != 0) {
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
+    } else {
+        MaterialTheme.colorScheme.background
+    }
+
+    Surface(
+        modifier = modifier,
+        color = containerColor
+    ) {
+        content()
     }
 }

@@ -1,9 +1,12 @@
 package com.salman.news.presentation.model
 
-import com.salman.news.core.ImageUrlGenerator
+import com.salman.news.core.DateTimeUtil
 import com.salman.news.core.IDHashGenerator
+import com.salman.news.core.ImageUrlGenerator
 import com.salman.news.domain.model.Article
 import com.salman.news.domain.model.ArticleSource
+import com.salman.news.domain.model.Suggestion
+import com.salman.news.domain.model.SuggestionsGroup
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -35,6 +38,17 @@ object ModelUtil {
                 url,
                 randomBoolean()
             )
+        }
+    }
+
+    fun fakeSuggestions(): List<SuggestionsGroup> {
+        return List(10) {
+            val articles = fakeArticles()
+            val date = DateTimeUtil.getCurrentDateMinusDaysFormatted(it + 1)
+            val suggestions = articles.mapIndexed { index, item ->
+                Suggestion(item.id, item.title, date, item)
+            }
+            SuggestionsGroup(date, suggestions)
         }
     }
 

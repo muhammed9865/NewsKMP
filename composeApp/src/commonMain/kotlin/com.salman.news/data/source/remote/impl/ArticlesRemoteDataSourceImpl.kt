@@ -38,6 +38,17 @@ class ArticlesRemoteDataSourceImpl(
         }
     }
 
+    override suspend fun search(query: String, from: String): Result<ArticlesDTO> {
+        return runCatching {
+            val response = remoteClient.get("everything") {
+                parameter("q", query)
+                parameter("from", from)
+            }.body<ArticlesDTO>().filterRemoved()
+
+            return Result.success(response)
+        }
+    }
+
     private fun ArticlesDTO.filterRemoved(): ArticlesDTO {
         val articles = articles.filterNot { it.isRemoved() }
         return copy(articles = articles)
