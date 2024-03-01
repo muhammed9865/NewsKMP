@@ -27,7 +27,11 @@ class SearchRepositoryImpl(
             }
             return lastSearchResult
         } else {
-            throw EmptySearchResultException()
+            throw result.exceptionOrNull()!!
         }
+    }
+
+    override suspend fun getLastSearchResult(): List<Article> {
+        return lastSearchResult
     }
 }

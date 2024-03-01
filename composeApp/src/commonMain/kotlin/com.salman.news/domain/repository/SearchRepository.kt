@@ -9,5 +9,6 @@ import com.salman.news.domain.model.SearchTimeFrame
 interface SearchRepository {
 
     suspend fun search(query: String, timeFrame: SearchTimeFrame): List<Article>
+    suspend fun getLastSearchResult(): List<Article>
 
 }
