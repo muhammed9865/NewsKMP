@@ -45,10 +45,12 @@ import com.salman.news.domain.model.Suggestion
 import com.salman.news.domain.model.SuggestionsGroup
 import com.salman.news.presentation.LocalTopNavigator
 import com.salman.news.presentation.common.extensions.dateStringResource
+import com.salman.news.presentation.common.extensions.stringResource
 import com.salman.news.presentation.composables.ContainerWithError
 import com.salman.news.presentation.composables.IndexedColorfulContainer
 import com.salman.news.presentation.composables.NTextFieldDefaults
 import com.salman.news.presentation.composables.ScreenWithTopBar
+import com.salman.news.presentation.screen.search_result.SearchResultScreen
 import com.salman.news.presentation.theme.Dimens
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
@@ -62,7 +64,9 @@ class SearchScreen : Screen {
         val navigator = LocalTopNavigator.current
         val viewModel: SearchViewModel = getScreenModel()
         val state by viewModel.state.collectAsState()
-        ContainerWithError {
+        ContainerWithError(
+            error = state.error?.stringResource?.let { stringResource(it) },
+        ) {
             ScreenWithTopBar(
                 title = stringResource(MR.strings.search),
                 onBackPressed = { navigator.pop() }

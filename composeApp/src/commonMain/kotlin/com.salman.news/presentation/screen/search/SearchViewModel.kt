@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -48,8 +49,11 @@ class SearchViewModel(
     private fun initSearchingInBackground() {
         scope.launch {
             searchQueryFlow
-                .debounce(SEARCH_DEBOUNCE_TIME)
                 .filter { it.isNotBlank() }
+                .onEach {
+                    mutableState.update { it.copy(isLoading = true, error = null) }
+                }
+                .debounce(SEARCH_DEBOUNCE_TIME)
                 .collect(::search)
         }
     }
@@ -79,7 +83,11 @@ class SearchViewModel(
             is Resource.Error -> {
                 Logger.error(this, "handleSearchResult: ${searchResult.throwable}")
                 mutableState.update {
-                    it.copy(isLoading = false, error = searchResult.throwable)
+                    it.copy(
+                        isLoading = false,
+                        error = searchResult.throwable,
+                        suggestions = emptyList()
+                    )
                 }
             }
 
