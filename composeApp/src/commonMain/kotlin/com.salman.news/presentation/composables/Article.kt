@@ -1,12 +1,7 @@
 package com.salman.news.presentation.composables
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,26 +10,25 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
@@ -63,11 +57,13 @@ fun ArticleItem(
 ) {
     val article = articleUi.article
     val isMenuOpen = articleUi.isOptionsMenuOpen
-    val blurRadiusState by animateIntAsState(if (isMenuOpen) 4 else 0)
-    val itemSize = DpSize(width = Dp.Infinity, height = 200.dp)
 
-    Box(modifier.size(itemSize)) {
-        Row(
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(2.dp)
+    ) {
+        Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .clickable {
@@ -75,48 +71,86 @@ fun ArticleItem(
                         onOptionsMenuClicked()
                     } else onArticleClicked(articleUi)
                 }
-                .blur(blurRadiusState.dp)
-                .padding(end = Dimens.ItemsPadding)
         ) {
-            AsyncShimmerImage(model = article.imageUrl, size = DpSize(170.dp, 200.dp))
-            Spacer(Modifier.width(Dimens.ItemsPadding))
-            Column(verticalArrangement = Arrangement.SpaceAround) {
+            AsyncShimmerImage(
+                model = article.imageUrl,
+                size = DpSize(Dp.Infinity, 250.dp),
+                contentScale = ContentScale.FillBounds,
+            )
+            Column(
+                modifier = Modifier.padding(horizontal = 25.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 ArticleTitleWithMenuButton(
                     title = article.title,
-                    isMenuOpen = isMenuOpen,
-                    onMenuClick = onOptionsMenuClicked
                 )
                 ArticleDescription(articleDescription = article.description) {
                     onArticleClicked(articleUi)
                 }
-                ArticlePublishDate(date = article.publishDate)
-                Spacer(Modifier.weight(1f))
-                ArticleLabelsWithBookmark(
+                ArticleFooterSection(
+                    modifier = Modifier.padding(top = 8.dp),
+                    author = article.author,
                     isBookmarked = article.isSaved,
-                    labels = article.labels.toList(),
-                    onBookmarkClicked = onBookmarkClicked
+                    publishDate = article.publishDate,
+                    onBookmarkClicked = onBookmarkClicked,
+                    onMuteAuthor = onMuteAuthor,
                 )
             }
         }
+    }
+}
 
-        AnimatedVisibility(
-            modifier = Modifier.fillMaxWidth(0.5f).align(Alignment.CenterEnd),
-            visible = isMenuOpen,
-            enter = slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween()
-            ),
-            exit = slideOutHorizontally(
-                animationSpec = tween(),
-                targetOffsetX = { it }
+@Composable
+private fun ArticleFooterSection(
+    modifier: Modifier = Modifier,
+    author: String,
+    publishDate: LocalDateTime,
+    isBookmarked: Boolean = false,
+    onBookmarkClicked: () -> Unit = {},
+    onMuteAuthor: () -> Unit = {}
+) {
+    Row(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Image(
+            painterResource(MR.images.ic_avatar),
+            contentDescription = null,
+            modifier = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+        )
+        Spacer(Modifier.width(8.dp))
+        Column {
+            Text(
+                text = author,
+                style = MaterialTheme.typography.labelMedium,
+                color = Color(0xFF1F1F1F)
             )
-        ) {
-            OptionsMenu(
-                onMuteAuthor = onMuteAuthor,
-                onMuteSource = onMuteSource,
-                onDismiss = { onOptionsMenuClicked() }
+            Text(
+                text = DateTimeUtil.format(publishDate),
+                style = MaterialTheme.typography.labelSmall,
+                color = Color(0xFF1F1F1F)
             )
         }
+        Spacer(Modifier.weight(1f))
+        val (bookmarkIcon, alpha) = if (isBookmarked) {
+            MR.images.ic_bookmark_checked to 1f
+        } else {
+            MR.images.ic_bookmark_outlined to 0.5f
+        }
+        val iconSize = 22.dp
+        DefaultIcon(
+            modifier = Modifier.size(iconSize),
+            painter = painterResource(MR.images.ic_block),
+            onClick = onMuteAuthor
+        )
+
+        DefaultIcon(
+            modifier = Modifier.size(22.dp)
+                .alpha(alpha),
+            painter = painterResource(bookmarkIcon),
+            onClick = onBookmarkClicked
+        )
     }
 }
 
@@ -163,13 +197,8 @@ fun ArticlesList(
 private fun ArticleTitleWithMenuButton(
     modifier: Modifier = Modifier,
     title: String,
-    isMenuOpen: Boolean = false,
-    onMenuClick: () -> Unit
 ) {
     val maxLines = 2
-    val menuIcon = painterResource(MR.images.ic_menu_open)
-    val rotationDegrees = if (isMenuOpen) 180F else 0F
-    val animatedRotation by animateFloatAsState(rotationDegrees)
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -181,15 +210,6 @@ private fun ArticleTitleWithMenuButton(
             style = MaterialTheme.typography.titleMedium,
             maxLines = maxLines,
             overflow = TextOverflow.Ellipsis
-        )
-        Spacer(Modifier.width(3.dp))
-        TonalIconButton(
-            painter = menuIcon,
-            modifier = Modifier
-                .weight(1f)
-                .padding(top = Dimens.ItemsPadding)
-                .rotate(animatedRotation),
-            onClick = onMenuClick
         )
     }
 }
@@ -205,27 +225,13 @@ private fun ArticleDescription(
         .take(maxCharacters)
         .plus("... ")
 
-    val continueReading = stringResource(MR.strings.continue_reading)
-    val continueReadingTag = "continue_reading"
-
     val annotatedDescription = buildAnnotatedString {
         withStyle(
-            MaterialTheme.typography.bodyMedium.toSpanStyle()
+            MaterialTheme.typography.bodyMedium.toSpanStyle().copy(
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+            )
         ) {
             append(description)
-        }
-
-        withStyle(
-            MaterialTheme.typography.labelLarge
-                .toSpanStyle()
-                .copy(color = MaterialTheme.colorScheme.primary)
-        ) {
-            addStringAnnotation(
-                continueReadingTag, continueReading,
-                start = description.length + 1,
-                end = description.length + continueReading.length
-            )
-            append(continueReading)
         }
     }
 
@@ -233,107 +239,6 @@ private fun ArticleDescription(
         modifier = modifier.fillMaxWidth(),
         text = annotatedDescription,
         maxLines = 4,
-        onClick = {
-            annotatedDescription
-                .getStringAnnotations(continueReadingTag, it, it)
-                .firstOrNull()
-                ?.let { onContinueReadingClicked() }
-        }
+        onClick = { onContinueReadingClicked() }
     )
-}
-
-@Composable
-private fun ArticlePublishDate(
-    modifier: Modifier = Modifier,
-    date: LocalDateTime
-) {
-    Text(
-        modifier = modifier.fillMaxWidth(),
-        text = DateTimeUtil.format(date),
-        style = MaterialTheme.typography.bodyMedium
-    )
-}
-
-@Composable
-private fun ArticleLabelsWithBookmark(
-    modifier: Modifier = Modifier,
-    isBookmarked: Boolean = false,
-    labels: List<String>,
-    onBookmarkClicked: () -> Unit = {},
-) {
-    val bookmarkIcon = if (isBookmarked)
-        painterResource(MR.images.ic_bookmark_checked)
-    else
-        painterResource(MR.images.ic_bookmark_outlined)
-    Row(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        labels.forEach {
-            Label(
-                modifier = Modifier.weight(2f),
-                label = it,
-                maxLines = 1,
-            )
-            Spacer(Modifier.width(8.dp))
-        }
-        Spacer(Modifier.weight(1.5f))
-        DefaultIcon(
-            painter = bookmarkIcon,
-            onClick = { onBookmarkClicked() }
-        )
-    }
-}
-
-@Composable
-private fun OptionsMenu(
-    modifier: Modifier = Modifier,
-    onMuteAuthor: () -> Unit = {},
-    onMuteSource: () -> Unit = {},
-    onDismiss: () -> Unit = {},
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth(0.5f)
-            .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.surface),
-    ) {
-        TonalIconButton(
-            painter = painterResource(MR.images.ic_menu_open),
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(top = Dimens.ItemsPadding, start = Dimens.ItemsPadding)
-                .rotate(180f),
-            onClick = onDismiss
-        )
-        Spacer(Modifier.weight(1f))
-        Box(
-            modifier = Modifier.fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable { onMuteAuthor() }
-                .padding(PaddingValues(start = Dimens.ItemsPadding, top = 5.dp))
-        ) {
-            Text(
-                text = stringResource(MR.strings.mute_author),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-        Spacer(Modifier.height(2.dp))
-        Box(
-            modifier = Modifier.fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .clickable { onMuteSource() }
-                .padding(PaddingValues(start = Dimens.ItemsPadding, top = 5.dp))
-        ) {
-            Text(
-                text = stringResource(MR.strings.mute_source),
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Start,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-    }
 }

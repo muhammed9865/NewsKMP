@@ -14,7 +14,9 @@ import dev.icerock.moko.resources.compose.fontFamilyResource
 @Composable
 fun Typography() = run {
     val jomhuriaFontFamily = fontFamilyResource(MR.fonts.Jomhuria.regular)
-    val jomolhariFontFamily = fontFamilyResource(MR.fonts.Jomolhari.regular)
+    val nunitoRegular = fontFamilyResource(MR.fonts.Nunito.regular)
+    val nunitoMedium = fontFamilyResource(MR.fonts.Nunito.medium)
+    val nunitoLight = fontFamilyResource(MR.fonts.Nunito.light)
 
     Typography(
         titleLarge = TextStyle(
@@ -22,27 +24,31 @@ fun Typography() = run {
             fontSize = 32.sp
         ),
         titleMedium = TextStyle(
-            fontFamily = jomhuriaFontFamily,
-            fontSize = 28.sp
+            fontFamily = nunitoMedium,
+            fontSize = 16.sp
         ),
         titleSmall = TextStyle(
-            fontFamily = jomhuriaFontFamily,
-            fontSize = 22.sp
+            fontFamily = nunitoMedium,
+            fontSize = 14.sp
         ),
         bodyLarge = TextStyle(
-            fontFamily = jomolhariFontFamily,
+            fontFamily = nunitoRegular,
             fontSize = 14.sp
         ),
         bodyMedium = TextStyle(
-            fontFamily = jomolhariFontFamily,
+            fontFamily = nunitoRegular,
             fontSize = 10.sp
         ),
         bodySmall = TextStyle(
-            fontFamily = jomolhariFontFamily,
+            fontFamily = nunitoRegular,
             fontSize = 8.sp
         ),
+        labelSmall = TextStyle(
+            fontFamily = nunitoLight,
+            fontSize = 10.sp
+        ),
         labelMedium = TextStyle(
-            fontFamily = jomhuriaFontFamily,
+            fontFamily = nunitoRegular,
             fontSize = 16.sp
         ),
         labelLarge = TextStyle(
