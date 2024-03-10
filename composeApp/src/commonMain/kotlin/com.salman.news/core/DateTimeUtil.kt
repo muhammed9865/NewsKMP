@@ -25,6 +25,7 @@ object DateTimeUtil {
             24 - date.hour
         else
             date.hour
+        val minute = date.minute.toString().padStart(2, '0')
         return with(date) {
             "$hour:$minute $amOrPm $dayOfMonth/$monthNumber/$year"
         }
